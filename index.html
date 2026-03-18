@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Powtórka z Matematyki</title>
+    <style>
+        :root {
+            --accent: #27ae60;
+            --glow: #2ecc71;
+            --bg: #020504;
+            --glass: rgba(0, 20, 10, 0.85);
+        }
+
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; }
+
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: 1; }
+        #main-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(8px); transition: 0.5s ease;
+        }
+        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9); }
+
+        .nav-header { position: absolute; top: 40px; text-align: center; width: 100%; }
+        h1 { font-size: 2.2em; letter-spacing: 4px; text-shadow: 0 0 20px var(--glow); margin: 0; text-transform: uppercase; }
+
+        .grid-container { display: grid; grid-template-columns: repeat(3, 220px); gap: 15px; margin-top: 50px; }
+
+        .card {
+            background: rgba(39, 174, 96, 0.08); padding: 30px 10px; border-radius: 20px;
+            text-align: center; border: 1px solid var(--accent);
+            cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .card:hover { background: rgba(39, 174, 96, 0.25); border-color: var(--glow); transform: translateY(-5px); box-shadow: 0 0 30px rgba(46, 204, 113, 0.3); }
+
+        .side-panel {
+            position: absolute; top: 50%; left: 30px; z-index: 1100;
+            transform: translateY(-50%);
+            background: var(--glass); backdrop-filter: blur(25px);
+            padding: 20px; border-radius: 25px; width: 340px;
+            border: 1px solid var(--accent); display: none;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        .side-panel.centered { left: 50%; transform: translate(-50%, -50%); width: 420px; }
+        .side-panel.active { display: block; animation: neonIn 0.4s ease-out; }
+
+        @keyframes neonIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+        label { display: block; font-size: 10px; color: var(--glow); margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; padding-left: 5px; }
+        .res-box { margin-top: 15px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 12px; border-left: 4px solid var(--glow); }
+        .res-val { color: var(--glow); font-weight: 900; font-size: 1.4em; }
+
+        input {
+            width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--accent);
+            border-radius: 10px; color: var(--glow); font-size: 16px; outline: none; box-sizing: border-box; margin-bottom: 10px;
+        }
+
+        .btn-back { cursor: pointer; background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 6px; margin-bottom: 15px; font-size: 10px; text-transform: uppercase; }
+        .btn-back:hover { background: var(--accent); color: white; }
+
+        .unit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .unit-chip {
+            padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--accent);
+            border-radius: 8px; cursor: pointer; text-align: center; font-size: 11px;
+        }
+        .unit-chip.active { background: var(--accent); color: white; box-shadow: 0 0 15px var(--glow); }
+
+        .category-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .tab-btn.active { background: var(--accent); color: white; }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div id="main-canvas"></div>
+
+<div id="screen-main" class="screen">
+    <div class="nav-header"><h1>Powtórki z Matematyki</h1></div>
+    <div class="grid-container">
+        <div class="card" onclick="changeScreen('screen-solids')"><h3>📐 BRYŁY</h3></div>
+        <div class="card" onclick="changeScreen('screen-circles')"><h3>⭕ KOŁA</h3></div>
+        <div class="card" onclick="openModule('units', true)"><h3>📏 JEDNOSTKI</h3></div>
+        <div class="card" onclick="openModule('pitagoras', true)"><h3>🔺 PITAGORAS</h3></div>
+        <div class="card" onclick="openModule('powers', true)"><h3>🔢 POTĘGI</h3></div>
+        <div class="card" onclick="openModule('percent', true)"><h3>% PROCENTY</h3></div>
+        <div class="card" onclick="openModule('fractions', true)"><h3>🍰 UŁAMKI</h3></div>
+    </div>
+</div>
+
+<div id="screen-solids" class="screen hidden">
+    <div class="nav-header"><button class="btn-back" onclick="changeScreen('screen-main')">← WRÓĆ</button><h1>Bryły</h1></div>
+    <div class="grid-container">
+        <div class="card" onclick="openModule('cube')"><h3>Sześcian</h3></div>
+        <div class="card" onclick="openModule('rect')"><h3>Prostopadłościan</h3></div>
+        <div class="card" onclick="openModule('prism')"><h3>Graniastosłup</h3></div>
+        <div class="card" onclick="openModule('pyramid')"><h3>Ostrosłup</h3></div>
+    </div>
+</div>
+
+<div id="screen-circles" class="screen hidden">
+    <div class="nav-header"><button class="btn-back" onclick="changeScreen('screen-main')">← WRÓĆ</button><h1>Koła i Okręgi</h1></div>
+    <div class="grid-container">
+        <div class="card" onclick="openModule('circle-area')"><h3>Pole Koła</h3></div>
+        <div class="card" onclick="openModule('circle-perim')"><h3>Obwód Koła</h3></div>
+    </div>
+</div>
+
+<div id="side-units" class="side-panel centered">
+    <button class="btn-back" onclick="closeModule()">← MENU</button>
+    <h2>JEDNOSTKI</h2>
+    <div class="category-tabs">
+        <button class="tab-btn active" onclick="setUnitCat('len', this)">DŁUGOŚĆ</button>
+        <button class="tab-btn" onclick="setUnitCat('area', this)">POWIERZCHNIA</button>
+    </div>
+    <label>Wartość</label><input type="number" id="unit-val" value="1" oninput="updateUnits()">
+    <label>Z jednostki:</label><div id="grid-from" class="unit-grid"></div>
+    <label>Na jednostkę:</label><div id="grid-to" class="unit-grid"></div>
+    <div class="res-box">WYNIK: <span class="res-val" id="unit-res">1.00</span></div>
+</div>
+
+<div id="side-cube" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Sześcian</h3>
+    <label>Krawędź a</label><input type="number" id="in-cube-a" value="2" oninput="updateLogic()">
+    <div class="res-box">Pc: <span class="res-val" id="out-cube-p">-</span><br>V: <span class="res-val" id="out-cube-v">-</span></div>
+</div>
+
+<div id="side-rect" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Prostopadłościan</h3>
+    <label>Bok a</label><input type="number" id="in-rect-a" value="3" oninput="updateLogic()">
+    <label>Bok b</label><input type="number" id="in-rect-b" value="2" oninput="updateLogic()">
+    <label>Wysokość H</label><input type="number" id="in-rect-h" value="4" oninput="updateLogic()">
+    <div class="res-box">Pc: <span class="res-val" id="out-rect-p">-</span><br>V: <span class="res-val" id="out-rect-v">-</span></div>
+</div>
+
+<div id="side-prism" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Graniastosłup (Trójkątny)</h3>
+    <label>Pole Podstawy Pp</label><input type="number" id="in-prism-pp" value="10" oninput="updateLogic()">
+    <label>Obwód Podstawy Obw</label><input type="number" id="in-prism-obw" value="12" oninput="updateLogic()">
+    <label>Wysokość H</label><input type="number" id="in-prism-h" value="5" oninput="updateLogic()">
+    <div class="res-box">Pc: <span class="res-val" id="out-prism-p">-</span><br>V: <span class="res-val" id="out-prism-v">-</span></div>
+</div>
+
+<div id="side-pyramid" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Ostrosłup</h3>
+    <label>Pole Podstawy Pp</label><input type="number" id="in-pyra-pp" value="16" oninput="updateLogic()">
+    <label>Pole Boczne Pb</label><input type="number" id="in-pyra-pb" value="24" oninput="updateLogic()">
+    <label>Wysokość H</label><input type="number" id="in-pyra-h" value="6" oninput="updateLogic()">
+    <div class="res-box">Pc: <span class="res-val" id="out-pyra-p">-</span><br>V: <span class="res-val" id="out-pyra-v">-</span></div>
+</div>
+
+<div id="side-circle-area" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Pole Koła</h3>
+    <label>Promień r</label><input type="number" id="in-carea-r" value="5" oninput="updateLogic()">
+    <div class="res-box">Pole P = πr²<br><span class="res-val" id="out-carea-p">-</span></div>
+</div>
+
+<div id="side-circle-perim" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Obwód Koła</h3>
+    <label>Promień r</label><input type="number" id="in-cper-r" value="5" oninput="updateLogic()">
+    <div class="res-box">Obwód L = 2πr<br><span class="res-val" id="out-cper-l">-</span></div>
+</div>
+
+<div id="side-pitagoras" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Pitagoras</h2>
+    <input type="number" id="in-pit-a" placeholder="a" oninput="updateLogic()"><input type="number" id="in-pit-b" placeholder="b" oninput="updateLogic()">
+    <div class="res-box">c = <span class="res-val" id="out-pit-c">-</span></div>
+</div>
+
+<div id="side-powers" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Potęgi</h2>
+    <input type="number" id="in-pow-x" value="4" oninput="updateLogic()">
+    <div class="res-box">x²: <span class="res-val" id="out-pow-2">-</span> | √x: <span class="res-val" id="out-pow-r">-</span></div>
+</div>
+
+<div id="side-percent" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Procenty</h2>
+    <input type="number" id="in-perc-p" value="20" oninput="updateLogic()"><input type="number" id="in-perc-v" value="100" oninput="updateLogic()">
+    <div class="res-box">Wynik: <span class="res-val" id="out-perc-res">-</span></div>
+</div>
+
+<div id="side-fractions" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Ułamki</h2>
+    <input type="number" id="in-frac-l" value="1" oninput="updateLogic()"><input type="number" id="in-frac-m" value="4" oninput="updateLogic()">
+    <div class="res-box">Dziesiętny: <span class="res-val" id="out-frac-dec">-</span></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+    let scene, camera, renderer, controls, currentMesh;
+    let bgScene, bgCamera, bgRenderer, starPoints;
+    let activeId = null, unitCat = 'len', unitFrom = 'cm', unitTo = 'm';
+
+    const units = {
+        len: { mm: 0.001, cm: 0.01, dm: 0.1, m: 1, km: 1000 },
+        area: { mm2: 0.000001, cm2: 0.0001, dm2: 0.01, m2: 1, a: 100, ha: 10000, km2: 1000000 }
+    };
+
+    function initStars() {
+        bgScene = new THREE.Scene();
+        bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        bgRenderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true });
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(5000 * 3);
+        for(let i=0; i<15000; i++) pos[i] = (Math.random() - 0.5) * 20;
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        starPoints = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.02, color: 0x2ecc71, transparent: true }));
+        bgScene.add(starPoints);
+        bgCamera.position.z = 5;
+    }
+
+    function initMain3D() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+        camera.position.set(5, 5, 5);
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('main-canvas').appendChild(renderer.domElement);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+        const pLight = new THREE.PointLight(0x2ecc71, 1); pLight.position.set(5, 5, 5); scene.add(pLight);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+    }
+
+    function setUnitCat(cat, btn) {
+        unitCat = cat;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        unitFrom = Object.keys(units[cat])[0]; unitTo = Object.keys(units[cat])[1];
+        renderUnitGrids();
+    }
+
+    function renderUnitGrids() {
+        const createGrid = (id, isFrom) => {
+            const el = document.getElementById(id); el.innerHTML = '';
+            Object.keys(units[unitCat]).forEach(u => {
+                const div = document.createElement('div');
+                div.className = `unit-chip ${ (isFrom?unitFrom:unitTo)===u?'active':'' }`;
+                div.innerText = u.replace('2','²');
+                div.onclick = () => { if(isFrom) unitFrom=u; else unitTo=u; renderUnitGrids(); updateUnits(); };
+                el.appendChild(div);
+            });
+        };
+        createGrid('grid-from', true); createGrid('grid-to', false); updateUnits();
+    }
+
+    function updateUnits() {
+        const val = parseFloat(document.getElementById('unit-val').value) || 0;
+        const res = val * (units[unitCat][unitFrom] / units[unitCat][unitTo]);
+        document.getElementById('unit-res').innerText = res.toLocaleString(undefined, {maximumFractionDigits: 6}) + " " + unitTo.replace('2','²');
+    }
+
+    function updateLogic() {
+        if (!activeId) return;
+        if (currentMesh) scene.remove(currentMesh);
+        const mat = new THREE.MeshStandardMaterial({color: 0x27ae60, metalness: 0.3, roughness: 0.4});
+        let geo;
+        const val = (id) => parseFloat(document.getElementById(id).value) || 0;
+
+        if(activeId === 'cube') {
+            const a = val('in-cube-a');
+            document.getElementById('out-cube-p').innerText = (6*a*a).toFixed(2);
+            document.getElementById('out-cube-v').innerText = (a*a*a).toFixed(2);
+            geo = new THREE.BoxGeometry(a,a,a);
+        } else if(activeId === 'rect') {
+            const a = val('in-rect-a'), b = val('in-rect-b'), h = val('in-rect-h');
+            document.getElementById('out-rect-p').innerText = (2*(a*b+b*h+a*h)).toFixed(2);
+            document.getElementById('out-rect-v').innerText = (a*b*h).toFixed(2);
+            geo = new THREE.BoxGeometry(a, h, b);
+        } else if(activeId === 'prism') {
+            const pp = val('in-prism-pp'), obw = val('in-prism-obw'), h = val('in-prism-h');
+            document.getElementById('out-prism-p').innerText = (2*pp + obw*h).toFixed(2);
+            document.getElementById('out-prism-v').innerText = (pp*h).toFixed(2);
+            geo = new THREE.CylinderGeometry(2, 2, h, 3);
+        } else if(activeId === 'pyramid') {
+            const pp = val('in-pyra-pp'), pb = val('in-pyra-pb'), h = val('in-pyra-h');
+            document.getElementById('out-pyra-p').innerText = (pp + pb).toFixed(2);
+            document.getElementById('out-pyra-v').innerText = (1/3 * pp * h).toFixed(2);
+            geo = new THREE.ConeGeometry(2, h, 4);
+        } else if(activeId === 'circle-area') {
+            const r = val('in-carea-r');
+            document.getElementById('out-carea-p').innerText = (Math.PI * r * r).toFixed(2);
+            geo = new THREE.CircleGeometry(r, 64);
+        } else if(activeId === 'circle-perim') {
+            const r = val('in-cper-r');
+            document.getElementById('out-cper-l').innerText = (2 * Math.PI * r).toFixed(2);
+            geo = new THREE.TorusGeometry(r, 0.05, 16, 100);
+        } else if(activeId === 'pitagoras') {
+            const c = Math.sqrt(val('in-pit-a')**2 + val('in-pit-b')**2);
+            document.getElementById('out-pit-c').innerText = isNaN(c) ? "0" : c.toFixed(2);
+        } else if(activeId === 'powers') {
+            const x = val('in-pow-x');
+            document.getElementById('out-pow-2').innerText = (x*x).toFixed(2);
+            document.getElementById('out-pow-r').innerText = x >= 0 ? Math.sqrt(x).toFixed(2) : "ERR";
+        } else if(activeId === 'percent') {
+            document.getElementById('out-perc-res').innerText = (val('in-perc-p')/100 * val('in-perc-v')).toFixed(2);
+        } else if(activeId === 'fractions') {
+            const res = val('in-frac-l')/(val('in-frac-m')||1);
+            document.getElementById('out-frac-dec').innerText = res.toFixed(3);
+        }
+
+        if(geo) {
+            currentMesh = new THREE.Mesh(geo, mat);
+            currentMesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.3})));
+            scene.add(currentMesh);
+        }
+    }
+
+    function openModule(id, centered) {
+        activeId = id;
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('side-'+id).classList.add('active');
+        if(id === 'units') renderUnitGrids();
+        document.getElementById('main-canvas').style.pointerEvents = (centered || id === 'units') ? "none" : "auto";
+        updateLogic();
+    }
+
+    function closeModule() {
+        document.getElementById('screen-main').classList.remove('hidden');
+        document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
+        if(currentMesh) scene.remove(currentMesh);
+        activeId = null;
+    }
+
+    function changeScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        starPoints.position.z += 0.01; if(starPoints.position.z > 5) starPoints.position.z = 0;
+        bgRenderer.render(bgScene, bgCamera);
+        if(controls) controls.update();
+        if(currentMesh) currentMesh.rotation.y += 0.01;
+        renderer.render(scene, camera);
+    }
+
+    window.onload = () => { initStars(); initMain3D(); animate(); };
+    window.onresize = () => {
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+    };
+</script>
+</body>
+</html>
