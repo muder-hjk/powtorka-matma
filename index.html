@@ -1,344 +1,756 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <title>Powtórka z Matematyki</title>
-    <style>
-        :root {
-            --accent: #27ae60;
-            --glow: #2ecc71;
-            --bg: #020504;
-            --glass: rgba(0, 20, 10, 0.85);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Czas na obiad | Domowa Jadłodajnia Osiek Wielki</title>
 
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; }
+  <!-- FAVICON (SVG Logo) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='100' r='96' fill='%23ffffff' stroke='%23d3a45c' stroke-width='7'/><text x='100' y='52' font-family='Georgia, serif' font-size='24' text-anchor='middle' fill='%231f2937'>Czas</text><text x='100' y='85' font-family='Georgia, serif' font-size='26' text-anchor='middle' fill='%231f2937'>na obiad</text><path d='M75 118 Q72 103 80 94 Q85 107 75 118 Z' fill='%231f2937'/><path d='M97 122 C94 130 98 142 132 142 L132 148 C132 152 128 155 124 155 L76 155 C72 155 68 152 68 148 L68 142 C102 142 106 130 103 122 Z' fill='%231f2937'/><rect x='65' y='142' width='70' height='30' rx='4' fill='%231f2937'/><rect x='72' y='148' width='8' height='18' rx='2' fill='%23ffffff'/><rect x='56' y='149' width='10' height='6' rx='2' fill='%231f2937'/><rect x='134' y='149' width='10' height='6' rx='2' fill='%231f2937'/><path d='M76 135 L124 135 Q126 135 125 130 Q110 120 100 120 Q90 120 75 130 Q74 135 76 135 Z' fill='%231f2937'/><rect x='96' y='115' width='8' height='6' rx='1' fill='%231f2937'/></svg>">
 
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: 1; }
-        #main-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+  <style>
+    :root {
+      --primary-color: #d97706;
+      --primary-hover: #b45309;
+      --accent-color: #fbbf24;
+      --google-blue: #4285F4;
 
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(8px); transition: 0.5s ease;
-        }
-        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9); }
+      --bg-body: #fdfbf7;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-nav: rgba(255, 255, 255, 0.85);
+      --border-card: rgba(229, 231, 235, 0.6);
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --footer-bg: #111827;
+      --shadow-liquid: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 35px -10px rgba(217, 119, 6, 0.2);
+      --tag-bg: #fef3c7;
+      --tag-text: #92400e;
+      --promo-bg: #eff6ff;
+      --promo-border: #3b82f6;
+      --promo-text: #1e40af;
+    }
 
-        .nav-header { position: absolute; top: 40px; text-align: center; width: 100%; }
-        h1 { font-size: 2.2em; letter-spacing: 4px; text-shadow: 0 0 20px var(--glow); margin: 0; text-transform: uppercase; }
+    [data-theme="dark"] {
+      --bg-body: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.75);
+      --bg-nav: rgba(15, 23, 42, 0.85);
+      --border-card: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --footer-bg: #020617;
+      --shadow-liquid: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --shadow-hover: 0 20px 35px -10px rgba(245, 158, 11, 0.25);
+      --tag-bg: rgba(245, 158, 11, 0.15);
+      --tag-text: #fbbf24;
+      --promo-bg: rgba(30, 58, 138, 0.3);
+      --promo-border: #60a5fa;
+      --promo-text: #93c5fd;
+    }
 
-        .grid-container { display: grid; grid-template-columns: repeat(3, 220px); gap: 15px; margin-top: 50px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-        .card {
-            background: rgba(39, 174, 96, 0.08); padding: 30px 10px; border-radius: 20px;
-            text-align: center; border: 1px solid var(--accent);
-            cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
-        }
-        .card:hover { background: rgba(39, 174, 96, 0.25); border-color: var(--glow); transform: translateY(-5px); box-shadow: 0 0 30px rgba(46, 204, 113, 0.3); }
+    html { scroll-behavior: smooth; }
 
-        .side-panel {
-            position: absolute; top: 50%; left: 30px; z-index: 1100;
-            transform: translateY(-50%);
-            background: var(--glass); backdrop-filter: blur(25px);
-            padding: 20px; border-radius: 25px; width: 340px;
-            border: 1px solid var(--accent); display: none;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        }
-        .side-panel.centered { left: 50%; transform: translate(-50%, -50%); width: 420px; }
-        .side-panel.active { display: block; animation: neonIn 0.4s ease-out; }
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-top: 70px;
+    }
 
-        @keyframes neonIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+    /* PASEK GÓRNY (NAVBAR) */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: var(--bg-nav);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-card);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
 
-        label { display: block; font-size: 10px; color: var(--glow); margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; padding-left: 5px; }
-        .res-box { margin-top: 15px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 12px; border-left: 4px solid var(--glow); }
-        .res-val { color: var(--glow); font-weight: 900; font-size: 1.4em; }
+    .nav-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: white;
+      padding: 2px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
 
-        input {
-            width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--accent);
-            border-radius: 10px; color: var(--glow); font-size: 16px; outline: none; box-sizing: border-box; margin-bottom: 10px;
-        }
+    .nav-logo svg { width: 100%; height: 100%; border-radius: 50%; }
 
-        .btn-back { cursor: pointer; background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 6px; margin-bottom: 15px; font-size: 10px; text-transform: uppercase; }
-        .btn-back:hover { background: var(--accent); color: white; }
+    .theme-toggle-btn {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
 
-        .unit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        .unit-chip {
-            padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--accent);
-            border-radius: 8px; cursor: pointer; text-align: center; font-size: 11px;
-        }
-        .unit-chip.active { background: var(--accent); color: white; box-shadow: 0 0 15px var(--glow); }
+    [data-theme="dark"] .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.1);
+    }
 
-        .category-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 10px; background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: bold; }
-        .tab-btn.active { background: var(--accent); color: white; }
-    </style>
+    .theme-toggle-btn:hover { transform: scale(1.1) rotate(15deg); }
+
+    .cart-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+
+    .cart-btn:hover { background: var(--primary-hover); transform: scale(1.05); }
+
+    .cart-badge {
+      background: white;
+      color: var(--primary-color);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    /* HEADER HERO */
+    header {
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+      url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat fixed;
+      color: white;
+      text-align: center;
+      padding: 60px 20px 50px;
+    }
+
+    header h1 { font-size: 2.8rem; margin-bottom: 8px; letter-spacing: 1px; }
+    header p { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; opacity: 0.9; }
+
+    .rating-badge {
+      background-color: var(--accent-color);
+      color: #1f2937;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 22px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+    }
+
+    /* LAYOUT & CARDS */
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 35px;
+    }
+
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+      header h1 { font-size: 2.1rem; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-liquid);
+      margin-bottom: 30px;
+      border: 1px solid var(--border-card);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    h2 {
+      color: var(--text-main);
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--primary-color);
+      padding-bottom: 8px;
+      display: inline-block;
+      font-size: 1.5rem;
+    }
+
+    .promo-banner {
+      background-color: var(--promo-bg);
+      border: 2px dashed var(--promo-border);
+      color: var(--promo-text);
+      padding: 16px 20px;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .promo-banner .badge-free {
+      background: var(--primary-color);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.02);
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border-card);
+      gap: 15px;
+    }
+
+    [data-theme="dark"] .menu-item { background: rgba(255, 255, 255, 0.03); }
+
+    .menu-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .menu-number {
+      background: var(--primary-color);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+      font-size: 0.95rem;
+    }
+
+    .menu-title { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
+
+    .menu-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .menu-price { font-size: 1.25rem; font-weight: 800; color: var(--primary-color); white-space: nowrap; }
+
+    .btn-add-cart {
+      background: rgba(217, 119, 6, 0.15);
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-add-cart:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .sides-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-card);
+    }
+
+    .sides-section h3 {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      margin-bottom: 15px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sides-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px;
+      text-align: center;
+    }
+
+    .side-item {
+      background: rgba(0, 0, 0, 0.02);
+      padding: 12px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    [data-theme="dark"] .side-item { background: rgba(255, 255, 255, 0.03); }
+
+    .side-name { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-call { background-color: var(--primary-color); color: white; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
+    .btn-call:hover { background-color: var(--primary-hover); }
+    .btn-route { background-color: #059669; color: white; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
+    .btn-route:hover { background-color: #047857; }
+    .btn-google { background-color: var(--google-blue); color: white; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3); }
+    .btn-google:hover { background-color: #2563eb; }
+
+    .info-list { list-style: none; }
+    .info-list li { margin-bottom: 18px; display: flex; align-items: flex-start; font-size: 1.05rem; }
+    .info-list strong { min-width: 130px; color: var(--text-main); display: inline-block; }
+
+    .status-open {
+      color: #10b981;
+      font-weight: bold;
+      background: rgba(16, 185, 129, 0.15);
+      padding: 3px 10px;
+      border-radius: 8px;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      margin-right: 8px;
+      margin-bottom: 10px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    /* MODAL KOSZYKA */
+    .cart-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .cart-modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .cart-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+
+    .cart-modal-close {
+      background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer;
+    }
+
+    .cart-items-list {
+      max-height: 250px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cart-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.03);
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    [data-theme="dark"] .cart-item-row { background: rgba(255,255,255,0.03); }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background-color: var(--footer-bg);
+      color: var(--text-muted);
+      margin-top: 50px;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
-<div id="main-canvas"></div>
+<!-- PASEK GÓRNY (FIXED NAV) -->
+<nav class="top-nav">
+  <!-- Lewo: Motyw -->
+  <button class="theme-toggle-btn" id="themeToggle" aria-label="Zmień tryb jasności">🌙</button>
 
-<div id="screen-main" class="screen">
-    <div class="nav-header"><h1>Powtórki z Matematyki</h1></div>
-    <div class="grid-container">
-        <div class="card" onclick="changeScreen('screen-solids')"><h3>📐 BRYŁY</h3></div>
-        <div class="card" onclick="changeScreen('screen-circles')"><h3>⭕ KOŁA</h3></div>
-        <div class="card" onclick="openModule('units', true)"><h3>📏 JEDNOSTKI</h3></div>
-        <div class="card" onclick="openModule('pitagoras', true)"><h3>🔺 PITAGORAS</h3></div>
-        <div class="card" onclick="openModule('powers', true)"><h3>🔢 POTĘGI</h3></div>
-        <div class="card" onclick="openModule('percent', true)"><h3>% PROCENTY</h3></div>
-        <div class="card" onclick="openModule('fractions', true)"><h3>🍰 UŁAMKI</h3></div>
+  <!-- Środek: Logo -->
+  <div class="nav-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#d3a45c" stroke-width="7"/>
+      <text x="100" y="52" font-family="Georgia, serif" font-size="24" text-anchor="middle" fill="#1f2937">Czas</text>
+      <text x="100" y="85" font-family="Georgia, serif" font-size="26" text-anchor="middle" fill="#1f2937">na obiad</text>
+      <path d="M75 118 Q72 103 80 94 Q85 107 75 118 Z" fill="#1f2937"/>
+      <path d="M76 135 L124 135 Q126 135 125 130 Q110 120 100 120 Q90 120 75 130 Q74 135 76 135 Z" fill="#1f2937"/>
+      <rect x="96" y="115" width="8" height="6" rx="1" fill="#1f2937"/>
+      <rect x="65" y="142" width="70" height="30" rx="4" fill="#1f2937"/>
+      <rect x="72" y="148" width="8" height="18" rx="2" fill="#ffffff"/>
+      <rect x="56" y="149" width="10" height="6" rx="2" fill="#1f2937"/>
+      <rect x="134" y="149" width="10" height="6" rx="2" fill="#1f2937"/>
+    </svg>
+  </div>
+
+  <!-- Prawo: Koszyk -->
+  <button class="cart-btn" onclick="openCart()">
+    🛒 Koszyk <span class="cart-badge" id="cartCount">0</span>
+  </button>
+</nav>
+
+<header>
+  <h1>Czas na obiad</h1>
+  <p>Smaczne, świeże i domowe posiłki w Osieku Wielkim</p>
+  <div class="rating-badge">
+    <span>★ 4.7 / 5</span>
+    <span style="font-weight: normal; font-size: 0.95rem;">(42 opinie w Google)</span>
+  </div>
+</header>
+
+<div class="container">
+  <main>
+    <section class="card">
+      <h2>O naszej jadłodajni</h2>
+      <div style="margin-top: 5px;">
+        <span class="tag">🍲 Domowe Obiady</span>
+        <span class="tag">🥗 Świeże Składniki</span>
+        <span class="tag">🚗 Na Wynos i Na Miejscu</span>
+      </div>
+      <p style="margin-top: 15px; font-size: 1.1rem; color: var(--text-muted);">
+        Zapraszamy na pyszne posiłki przygotowywane codziennie ze świeżych produktów.
+        Dbamy o domowy smak i serdeczną atmosferę. Zjedz u nas na miejscu lub weź obiad na wynos!
+      </p>
+
+      <div class="action-buttons">
+        <a href="tel:727638831" class="btn btn-call">📞 Zadzwoń: 727 638 831</a>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Osiek+Wielki+130a+62-613+Osiek+Wielki" target="_blank" class="btn btn-route">🗺️ Wyznacz Trasę</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Aktualne Menu Dnia</h2>
+
+      <div class="promo-banner">
+        <div>🥣 Barszcz biały z makaronem</div>
+        <span class="badge-free">GRATIS!</span>
+      </div>
+
+      <div class="menu-list">
+        <!-- PRZYKŁADOWE MENU DNIA -->
+        <div class="menu-item">
+          <div class="menu-left">
+            <span class="menu-number">1</span>
+            <span class="menu-title">Placek po zbójnicku</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-price">21 zł</span>
+            <button class="btn-add-cart" onclick="addToCart('Placek po zbójnicku', '21 zł')">➕ Dodaj</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="menu-left">
+            <span class="menu-number">2</span>
+            <span class="menu-title">Roladki drobiowe z porem</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-price">22 zł</span>
+            <button class="btn-add-cart" onclick="addToCart('Roladki drobiowe z porem', '22 zł')">➕ Dodaj</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="menu-left">
+            <span class="menu-number">3</span>
+            <span class="menu-title">Mielone na liściu kapusty</span>
+          </div>
+          <div class="menu-right">
+            <span class="menu-price">21 zł</span>
+            <button class="btn-add-cart" onclick="addToCart('Mielone na liściu kapusty', '21 zł')">➕ Dodaj</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sides-section">
+        <h3>Dodatki do wyboru:</h3>
+        <div class="sides-grid">
+          <div class="side-item"><span class="side-name">🥔 Puree</span></div>
+          <div class="side-item"><span class="side-name">🌾 Kasza</span></div>
+          <div class="side-item"><span class="side-name">🥗 Surówka</span></div>
+          <div class="side-item"><span class="side-name">🥒 Mizeria</span></div>
+          <div class="side-item"><span class="side-name">🥕 Marchew z groszkiem</span></div>
+          <div class="side-item"><span class="side-name">🔴 Buraczki</span></div>
+        </div>
+      </div>
+
+      <div class="promo-banner" style="margin-top: 25px; margin-bottom: 0;">
+        <div>🍹 Dla gości przy stolikach Lemoniada</div>
+        <span class="badge-free">GRATIS!</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Podziel się opinią</h2>
+      <p style="margin-bottom: 20px; color: var(--text-muted);">
+        Byłeś u nas? Będzie nam bardzo miło, jeśli zostawisz swoją ocenę w Google. Pomaga nam to stale ulepszać nasze menu!
+      </p>
+      <a href="https://www.google.com/search?q=Czas+na+obiad+Osiek+Wielki#lkt=LocalPoiReviews" target="_blank" class="btn btn-google">
+        ★ Napisz opinię w Google
+      </a>
+    </section>
+  </main>
+
+  <aside>
+    <section class="card">
+      <h2>Informacje</h2>
+      <ul class="info-list">
+        <li>
+          <strong>Adres:</strong>
+          <span style="color: var(--text-muted);">Osiek Wielki 130a<br>62-613 Osiek Wielki</span>
+        </li>
+        <li>
+          <strong>Telefon:</strong>
+          <a href="tel:727638831" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">727 638 831</a>
+        </li>
+        <li>
+          <strong>Godziny:</strong>
+          <div>
+            <span class="status-open">Otwarte</span><br>
+            <small style="color: var(--text-muted);">Poniedziałek – Sobota: 12:00 – 17:00</small>
+          </div>
+        </li>
+        <li>
+          <strong>Typ:</strong>
+          <span style="color: var(--text-muted);">Jadłodajnia</span>
+        </li>
+      </ul>
+    </section>
+  </aside>
+</div>
+
+<!-- OKNO MODALNE KOSZYKA -->
+<div class="cart-modal" id="cartModal">
+  <div class="cart-modal-content">
+    <div class="cart-modal-header">
+      <h3>🛒 Twój Koszyk</h3>
+      <button class="cart-modal-close" onclick="closeCart()">✕</button>
     </div>
-</div>
-
-<div id="screen-solids" class="screen hidden">
-    <div class="nav-header"><button class="btn-back" onclick="changeScreen('screen-main')">← WRÓĆ</button><h1>Bryły</h1></div>
-    <div class="grid-container">
-        <div class="card" onclick="openModule('cube')"><h3>Sześcian</h3></div>
-        <div class="card" onclick="openModule('rect')"><h3>Prostopadłościan</h3></div>
-        <div class="card" onclick="openModule('prism')"><h3>Graniastosłup</h3></div>
-        <div class="card" onclick="openModule('pyramid')"><h3>Ostrosłup</h3></div>
+    <div class="cart-items-list" id="cartItemsList">
+      <!-- Dania pojawią się tu dynamicznie -->
     </div>
+    <p style="text-align: right; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">
+      Suma: <span id="cartTotal" style="color: var(--primary-color);">0 zł</span>
+    </p>
+    <a href="tel:727638831" class="btn btn-call" style="width: 100%;">📞 Złóż zamówienie telefonicznie</a>
+  </div>
 </div>
 
-<div id="screen-circles" class="screen hidden">
-    <div class="nav-header"><button class="btn-back" onclick="changeScreen('screen-main')">← WRÓĆ</button><h1>Koła i Okręgi</h1></div>
-    <div class="grid-container">
-        <div class="card" onclick="openModule('circle-area')"><h3>Pole Koła</h3></div>
-        <div class="card" onclick="openModule('circle-perim')"><h3>Obwód Koła</h3></div>
-    </div>
-</div>
-
-<div id="side-units" class="side-panel centered">
-    <button class="btn-back" onclick="closeModule()">← MENU</button>
-    <h2>JEDNOSTKI</h2>
-    <div class="category-tabs">
-        <button class="tab-btn active" onclick="setUnitCat('len', this)">DŁUGOŚĆ</button>
-        <button class="tab-btn" onclick="setUnitCat('area', this)">POWIERZCHNIA</button>
-    </div>
-    <label>Wartość</label><input type="number" id="unit-val" value="1" oninput="updateUnits()">
-    <label>Z jednostki:</label><div id="grid-from" class="unit-grid"></div>
-    <label>Na jednostkę:</label><div id="grid-to" class="unit-grid"></div>
-    <div class="res-box">WYNIK: <span class="res-val" id="unit-res">1.00</span></div>
-</div>
-
-<div id="side-cube" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Sześcian</h3>
-    <label>Krawędź a</label><input type="number" id="in-cube-a" value="2" oninput="updateLogic()">
-    <div class="res-box">Pc: <span class="res-val" id="out-cube-p">-</span><br>V: <span class="res-val" id="out-cube-v">-</span></div>
-</div>
-
-<div id="side-rect" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Prostopadłościan</h3>
-    <label>Bok a</label><input type="number" id="in-rect-a" value="3" oninput="updateLogic()">
-    <label>Bok b</label><input type="number" id="in-rect-b" value="2" oninput="updateLogic()">
-    <label>Wysokość H</label><input type="number" id="in-rect-h" value="4" oninput="updateLogic()">
-    <div class="res-box">Pc: <span class="res-val" id="out-rect-p">-</span><br>V: <span class="res-val" id="out-rect-v">-</span></div>
-</div>
-
-<div id="side-prism" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Graniastosłup (Trójkątny)</h3>
-    <label>Pole Podstawy Pp</label><input type="number" id="in-prism-pp" value="10" oninput="updateLogic()">
-    <label>Obwód Podstawy Obw</label><input type="number" id="in-prism-obw" value="12" oninput="updateLogic()">
-    <label>Wysokość H</label><input type="number" id="in-prism-h" value="5" oninput="updateLogic()">
-    <div class="res-box">Pc: <span class="res-val" id="out-prism-p">-</span><br>V: <span class="res-val" id="out-prism-v">-</span></div>
-</div>
-
-<div id="side-pyramid" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Ostrosłup</h3>
-    <label>Pole Podstawy Pp</label><input type="number" id="in-pyra-pp" value="16" oninput="updateLogic()">
-    <label>Pole Boczne Pb</label><input type="number" id="in-pyra-pb" value="24" oninput="updateLogic()">
-    <label>Wysokość H</label><input type="number" id="in-pyra-h" value="6" oninput="updateLogic()">
-    <div class="res-box">Pc: <span class="res-val" id="out-pyra-p">-</span><br>V: <span class="res-val" id="out-pyra-v">-</span></div>
-</div>
-
-<div id="side-circle-area" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Pole Koła</h3>
-    <label>Promień r</label><input type="number" id="in-carea-r" value="5" oninput="updateLogic()">
-    <div class="res-box">Pole P = πr²<br><span class="res-val" id="out-carea-p">-</span></div>
-</div>
-
-<div id="side-circle-perim" class="side-panel"><button class="btn-back" onclick="closeModule()">← LISTA</button><h3>Obwód Koła</h3>
-    <label>Promień r</label><input type="number" id="in-cper-r" value="5" oninput="updateLogic()">
-    <div class="res-box">Obwód L = 2πr<br><span class="res-val" id="out-cper-l">-</span></div>
-</div>
-
-<div id="side-pitagoras" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Pitagoras</h2>
-    <input type="number" id="in-pit-a" placeholder="a" oninput="updateLogic()"><input type="number" id="in-pit-b" placeholder="b" oninput="updateLogic()">
-    <div class="res-box">c = <span class="res-val" id="out-pit-c">-</span></div>
-</div>
-
-<div id="side-powers" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Potęgi</h2>
-    <input type="number" id="in-pow-x" value="4" oninput="updateLogic()">
-    <div class="res-box">x²: <span class="res-val" id="out-pow-2">-</span> | √x: <span class="res-val" id="out-pow-r">-</span></div>
-</div>
-
-<div id="side-percent" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Procenty</h2>
-    <input type="number" id="in-perc-p" value="20" oninput="updateLogic()"><input type="number" id="in-perc-v" value="100" oninput="updateLogic()">
-    <div class="res-box">Wynik: <span class="res-val" id="out-perc-res">-</span></div>
-</div>
-
-<div id="side-fractions" class="side-panel centered"><button class="btn-back" onclick="closeModule()">← MENU</button><h2>Ułamki</h2>
-    <input type="number" id="in-frac-l" value="1" oninput="updateLogic()"><input type="number" id="in-frac-m" value="4" oninput="updateLogic()">
-    <div class="res-box">Dziesiętny: <span class="res-val" id="out-frac-dec">-</span></div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<footer>
+  <p>&copy; Czas na obiad — Osiek Wielki. Wszystkie prawa zastrzeżone.</p>
+</footer>
 
 <script>
-    let scene, camera, renderer, controls, currentMesh;
-    let bgScene, bgCamera, bgRenderer, starPoints;
-    let activeId = null, unitCat = 'len', unitFrom = 'cm', unitTo = 'm';
+  // MOTYW JASNY / CIEMNY
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme');
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    const units = {
-        len: { mm: 0.001, cm: 0.01, dm: 0.1, m: 1, km: 1000 },
-        area: { mm2: 0.000001, cm2: 0.0001, dm2: 0.01, m2: 1, a: 100, ha: 10000, km2: 1000000 }
-    };
+  if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggleBtn.textContent = '☀️';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    themeToggleBtn.textContent = '🌙';
+  }
 
-    function initStars() {
-        bgScene = new THREE.Scene();
-        bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        bgRenderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true });
-        bgRenderer.setSize(window.innerWidth, window.innerHeight);
-        const geo = new THREE.BufferGeometry();
-        const pos = new Float32Array(5000 * 3);
-        for(let i=0; i<15000; i++) pos[i] = (Math.random() - 0.5) * 20;
-        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        starPoints = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.02, color: 0x2ecc71, transparent: true }));
-        bgScene.add(starPoints);
-        bgCamera.position.z = 5;
+  themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    let newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    themeToggleBtn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+
+  // WCZYTYWANIE DANYCH Z ADMINA
+  function loadDynamicMenu() {
+    const savedSoup = localStorage.getItem('promoSoup');
+    const savedDrink = localStorage.getItem('promoDrink');
+    const savedDishes = JSON.parse(localStorage.getItem('menuDishes'));
+
+    const promoBanners = document.querySelectorAll('.promo-banner div');
+    if (savedSoup && promoBanners[0]) promoBanners[0].innerHTML = `🥣 ${savedSoup}`;
+    if (savedDrink && promoBanners[1]) promoBanners[1].innerHTML = `🍹 ${savedDrink}`;
+
+    if (savedDishes && savedDishes.length > 0) {
+      const menuList = document.querySelector('.menu-list');
+      menuList.innerHTML = '';
+
+      savedDishes.forEach((dish, index) => {
+        const itemHTML = `
+                        <div class="menu-item">
+                            <div class="menu-left">
+                                <span class="menu-number">${index + 1}</span>
+                                <span class="menu-title">${dish.name}</span>
+                            </div>
+                            <div class="menu-right">
+                                <span class="menu-price">${dish.price}</span>
+                                <button class="btn-add-cart" onclick="addToCart('${dish.name}', '${dish.price}')">➕ Dodaj</button>
+                            </div>
+                        </div>
+                    `;
+        menuList.innerHTML += itemHTML;
+      });
+    }
+  }
+
+  // LOGIKA KOSZYKA
+  let cart = [];
+
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    updateCartUI();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    document.getElementById('cartCount').textContent = cart.length;
+
+    const list = document.getElementById('cartItemsList');
+    list.innerHTML = '';
+
+    let total = 0;
+
+    if (cart.length === 0) {
+      list.innerHTML = '<p style="text-align:center; color: var(--text-muted);">Koszyk jest pusty.</p>';
+    } else {
+      cart.forEach((item, index) => {
+        const numericPrice = parseInt(item.price) || 0;
+        total += numericPrice;
+
+        const row = document.createElement('div');
+        row.className = 'cart-item-row';
+        row.innerHTML = `
+                        <span>${item.name}</span>
+                        <div>
+                            <strong style="margin-right: 10px;">${item.price}</strong>
+                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color: red; cursor:pointer;">🗑️</button>
+                        </div>
+                    `;
+        list.appendChild(row);
+      });
     }
 
-    function initMain3D() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-        camera.position.set(5, 5, 5);
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('main-canvas').appendChild(renderer.domElement);
-        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-        const pLight = new THREE.PointLight(0x2ecc71, 1); pLight.position.set(5, 5, 5); scene.add(pLight);
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-    }
+    document.getElementById('cartTotal').textContent = total + ' zł';
+  }
 
-    function setUnitCat(cat, btn) {
-        unitCat = cat;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        unitFrom = Object.keys(units[cat])[0]; unitTo = Object.keys(units[cat])[1];
-        renderUnitGrids();
-    }
+  function openCart() {
+    document.getElementById('cartModal').style.display = 'flex';
+  }
 
-    function renderUnitGrids() {
-        const createGrid = (id, isFrom) => {
-            const el = document.getElementById(id); el.innerHTML = '';
-            Object.keys(units[unitCat]).forEach(u => {
-                const div = document.createElement('div');
-                div.className = `unit-chip ${ (isFrom?unitFrom:unitTo)===u?'active':'' }`;
-                div.innerText = u.replace('2','²');
-                div.onclick = () => { if(isFrom) unitFrom=u; else unitTo=u; renderUnitGrids(); updateUnits(); };
-                el.appendChild(div);
-            });
-        };
-        createGrid('grid-from', true); createGrid('grid-to', false); updateUnits();
-    }
+  function closeCart() {
+    document.getElementById('cartModal').style.display = 'none';
+  }
 
-    function updateUnits() {
-        const val = parseFloat(document.getElementById('unit-val').value) || 0;
-        const res = val * (units[unitCat][unitFrom] / units[unitCat][unitTo]);
-        document.getElementById('unit-res').innerText = res.toLocaleString(undefined, {maximumFractionDigits: 6}) + " " + unitTo.replace('2','²');
-    }
-
-    function updateLogic() {
-        if (!activeId) return;
-        if (currentMesh) scene.remove(currentMesh);
-        const mat = new THREE.MeshStandardMaterial({color: 0x27ae60, metalness: 0.3, roughness: 0.4});
-        let geo;
-        const val = (id) => parseFloat(document.getElementById(id).value) || 0;
-
-        if(activeId === 'cube') {
-            const a = val('in-cube-a');
-            document.getElementById('out-cube-p').innerText = (6*a*a).toFixed(2);
-            document.getElementById('out-cube-v').innerText = (a*a*a).toFixed(2);
-            geo = new THREE.BoxGeometry(a,a,a);
-        } else if(activeId === 'rect') {
-            const a = val('in-rect-a'), b = val('in-rect-b'), h = val('in-rect-h');
-            document.getElementById('out-rect-p').innerText = (2*(a*b+b*h+a*h)).toFixed(2);
-            document.getElementById('out-rect-v').innerText = (a*b*h).toFixed(2);
-            geo = new THREE.BoxGeometry(a, h, b);
-        } else if(activeId === 'prism') {
-            const pp = val('in-prism-pp'), obw = val('in-prism-obw'), h = val('in-prism-h');
-            document.getElementById('out-prism-p').innerText = (2*pp + obw*h).toFixed(2);
-            document.getElementById('out-prism-v').innerText = (pp*h).toFixed(2);
-            geo = new THREE.CylinderGeometry(2, 2, h, 3);
-        } else if(activeId === 'pyramid') {
-            const pp = val('in-pyra-pp'), pb = val('in-pyra-pb'), h = val('in-pyra-h');
-            document.getElementById('out-pyra-p').innerText = (pp + pb).toFixed(2);
-            document.getElementById('out-pyra-v').innerText = (1/3 * pp * h).toFixed(2);
-            geo = new THREE.ConeGeometry(2, h, 4);
-        } else if(activeId === 'circle-area') {
-            const r = val('in-carea-r');
-            document.getElementById('out-carea-p').innerText = (Math.PI * r * r).toFixed(2);
-            geo = new THREE.CircleGeometry(r, 64);
-        } else if(activeId === 'circle-perim') {
-            const r = val('in-cper-r');
-            document.getElementById('out-cper-l').innerText = (2 * Math.PI * r).toFixed(2);
-            geo = new THREE.TorusGeometry(r, 0.05, 16, 100);
-        } else if(activeId === 'pitagoras') {
-            const c = Math.sqrt(val('in-pit-a')**2 + val('in-pit-b')**2);
-            document.getElementById('out-pit-c').innerText = isNaN(c) ? "0" : c.toFixed(2);
-        } else if(activeId === 'powers') {
-            const x = val('in-pow-x');
-            document.getElementById('out-pow-2').innerText = (x*x).toFixed(2);
-            document.getElementById('out-pow-r').innerText = x >= 0 ? Math.sqrt(x).toFixed(2) : "ERR";
-        } else if(activeId === 'percent') {
-            document.getElementById('out-perc-res').innerText = (val('in-perc-p')/100 * val('in-perc-v')).toFixed(2);
-        } else if(activeId === 'fractions') {
-            const res = val('in-frac-l')/(val('in-frac-m')||1);
-            document.getElementById('out-frac-dec').innerText = res.toFixed(3);
-        }
-
-        if(geo) {
-            currentMesh = new THREE.Mesh(geo, mat);
-            currentMesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.3})));
-            scene.add(currentMesh);
-        }
-    }
-
-    function openModule(id, centered) {
-        activeId = id;
-        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-        document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('side-'+id).classList.add('active');
-        if(id === 'units') renderUnitGrids();
-        document.getElementById('main-canvas').style.pointerEvents = (centered || id === 'units') ? "none" : "auto";
-        updateLogic();
-    }
-
-    function closeModule() {
-        document.getElementById('screen-main').classList.remove('hidden');
-        document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
-        if(currentMesh) scene.remove(currentMesh);
-        activeId = null;
-    }
-
-    function changeScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        starPoints.position.z += 0.01; if(starPoints.position.z > 5) starPoints.position.z = 0;
-        bgRenderer.render(bgScene, bgCamera);
-        if(controls) controls.update();
-        if(currentMesh) currentMesh.rotation.y += 0.01;
-        renderer.render(scene, camera);
-    }
-
-    window.onload = () => { initStars(); initMain3D(); animate(); };
-    window.onresize = () => {
-        bgRenderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-    };
+  document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicMenu();
+    updateCartUI();
+  });
 </script>
 </body>
 </html>
