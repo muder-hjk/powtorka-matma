@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Czas na obiad | Domowa Jadłodajnia Osiek Wielki</title>
 
-  <!-- FAVICON (SVG Logo) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='100' r='96' fill='%23ffffff' stroke='%23d3a45c' stroke-width='7'/><text x='100' y='52' font-family='Georgia, serif' font-size='24' text-anchor='middle' fill='%231f2937'>Czas</text><text x='100' y='85' font-family='Georgia, serif' font-size='26' text-anchor='middle' fill='%231f2937'>na obiad</text><path d='M75 118 Q72 103 80 94 Q85 107 75 118 Z' fill='%231f2937'/><path d='M97 122 C94 130 98 142 132 142 L132 148 C132 152 128 155 124 155 L76 155 C72 155 68 152 68 148 L68 142 C102 142 106 130 103 122 Z' fill='%231f2937'/><rect x='65' y='142' width='70' height='30' rx='4' fill='%231f2937'/><rect x='72' y='148' width='8' height='18' rx='2' fill='%23ffffff'/><rect x='56' y='149' width='10' height='6' rx='2' fill='%231f2937'/><rect x='134' y='149' width='10' height='6' rx='2' fill='%231f2937'/><path d='M76 135 L124 135 Q126 135 125 130 Q110 120 100 120 Q90 120 75 130 Q74 135 76 135 Z' fill='%231f2937'/><rect x='96' y='115' width='8' height='6' rx='1' fill='%231f2937'/></svg>">
+  <!-- FAVICON (LOGO CZAS NA OBIAD) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' rx='40' fill='%231e293b'/><circle cx='100' cy='90' r='60' fill='none' stroke='%23d97706' stroke-width='6'/><path d='M80 75 Q100 55 120 75 Q100 95 80 75 Z' fill='%23d97706'/><path d='M75 115 C75 110 125 110 125 115 L120 140 C120 145 80 145 80 140 Z' fill='%23f59e0b'/><rect x='85' y='100' width='6' height='15' rx='3' fill='%23fbbf24'/><rect x='97' y='95' width='6' height='20' rx='3' fill='%23fbbf24'/><rect x='109' y='100' width='6' height='15' rx='3' fill='%23fbbf24'/><text x='100' y='175' font-family='Arial, sans-serif' font-weight='bold' font-size='16' text-anchor='middle' fill='%23f8fafc'>CZAS NA OBIAD</text></svg>">
 
   <style>
     :root {
@@ -70,7 +70,6 @@
       padding-top: 70px;
     }
 
-    /* PASEK GÓRNY (NAVBAR) */
     .top-nav {
       position: fixed;
       top: 0;
@@ -90,16 +89,13 @@
     }
 
     .nav-logo {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: white;
-      padding: 2px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
       cursor: pointer;
     }
 
-    .nav-logo svg { width: 100%; height: 100%; border-radius: 50%; }
+    .nav-logo svg { width: 100%; height: 100%; border-radius: 12px; }
 
     .theme-toggle-btn {
       background: rgba(0, 0, 0, 0.05);
@@ -115,10 +111,7 @@
       font-size: 1.2rem;
     }
 
-    [data-theme="dark"] .theme-toggle-btn {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
+    [data-theme="dark"] .theme-toggle-btn { background: rgba(255, 255, 255, 0.1); }
     .theme-toggle-btn:hover { transform: scale(1.1) rotate(15deg); }
 
     .cart-btn {
@@ -151,7 +144,6 @@
       font-weight: 800;
     }
 
-    /* HEADER HERO */
     header {
       background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
       url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat fixed;
@@ -176,7 +168,6 @@
       box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
     }
 
-    /* LAYOUT & CARDS */
     .container {
       max-width: 1100px;
       margin: 40px auto;
@@ -241,11 +232,7 @@
       letter-spacing: 0.5px;
     }
 
-    .menu-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .menu-list { display: flex; flex-direction: column; gap: 12px; }
 
     .menu-item {
       display: flex;
@@ -260,11 +247,7 @@
 
     [data-theme="dark"] .menu-item { background: rgba(255, 255, 255, 0.03); }
 
-    .menu-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+    .menu-left { display: flex; align-items: center; gap: 15px; }
 
     .menu-number {
       background: var(--primary-color);
@@ -281,13 +264,7 @@
     }
 
     .menu-title { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
-
-    .menu-right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
+    .menu-right { display: flex; align-items: center; gap: 15px; }
     .menu-price { font-size: 1.25rem; font-weight: 800; color: var(--primary-color); white-space: nowrap; }
 
     .btn-add-cart {
@@ -300,10 +277,7 @@
       cursor: pointer;
     }
 
-    .btn-add-cart:hover {
-      background: var(--primary-color);
-      color: white;
-    }
+    .btn-add-cart:hover { background: var(--primary-color); color: white; }
 
     .sides-section {
       margin-top: 30px;
@@ -339,7 +313,6 @@
     }
 
     [data-theme="dark"] .side-item { background: rgba(255, 255, 255, 0.03); }
-
     .side-name { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
 
     .action-buttons {
@@ -360,6 +333,8 @@
       font-weight: bold;
       font-size: 1rem;
       text-align: center;
+      cursor: pointer;
+      border: none;
     }
 
     .btn:hover { transform: translateY(-2px); }
@@ -432,7 +407,7 @@
     }
 
     .cart-items-list {
-      max-height: 250px;
+      max-height: 200px;
       overflow-y: auto;
       margin-bottom: 15px;
       display: flex;
@@ -451,6 +426,25 @@
 
     [data-theme="dark"] .cart-item-row { background: rgba(255,255,255,0.03); }
 
+    .payment-options {
+      margin: 15px 0;
+      padding: 12px;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.02);
+    }
+
+    .payment-options label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .payment-options label:last-child { margin-bottom: 0; }
+
     footer {
       text-align: center;
       padding: 30px 20px;
@@ -463,28 +457,22 @@
 </head>
 <body>
 
-<!-- PASEK GÓRNY (FIXED NAV) -->
 <nav class="top-nav">
-  <!-- Lewo: Motyw -->
   <button class="theme-toggle-btn" id="themeToggle" aria-label="Zmień tryb jasności">🌙</button>
 
-  <!-- Środek: Logo -->
   <div class="nav-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
     <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#d3a45c" stroke-width="7"/>
-      <text x="100" y="52" font-family="Georgia, serif" font-size="24" text-anchor="middle" fill="#1f2937">Czas</text>
-      <text x="100" y="85" font-family="Georgia, serif" font-size="26" text-anchor="middle" fill="#1f2937">na obiad</text>
-      <path d="M75 118 Q72 103 80 94 Q85 107 75 118 Z" fill="#1f2937"/>
-      <path d="M76 135 L124 135 Q126 135 125 130 Q110 120 100 120 Q90 120 75 130 Q74 135 76 135 Z" fill="#1f2937"/>
-      <rect x="96" y="115" width="8" height="6" rx="1" fill="#1f2937"/>
-      <rect x="65" y="142" width="70" height="30" rx="4" fill="#1f2937"/>
-      <rect x="72" y="148" width="8" height="18" rx="2" fill="#ffffff"/>
-      <rect x="56" y="149" width="10" height="6" rx="2" fill="#1f2937"/>
-      <rect x="134" y="149" width="10" height="6" rx="2" fill="#1f2937"/>
+      <rect width="200" height="200" rx="40" fill="#1e293b"/>
+      <circle cx="100" cy="90" r="60" fill="none" stroke="#d97706" stroke-width="6"/>
+      <path d="M80 75 Q100 55 120 75 Q100 95 80 75 Z" fill="#d97706"/>
+      <path d="M75 115 C75 110 125 110 125 115 L120 140 C120 145 80 145 80 140 Z" fill="#f59e0b"/>
+      <rect x="85" y="100" width="6" height="15" rx="3" fill="#fbbf24"/>
+      <rect x="97" y="95" width="6" height="20" rx="3" fill="#fbbf24"/>
+      <rect x="109" y="100" width="6" height="15" rx="3" fill="#fbbf24"/>
+      <text x="100" y="175" font-family="Arial, sans-serif" font-weight="bold" font-size="16" text-anchor="middle" fill="#f8fafc">CZAS NA OBIAD</text>
     </svg>
   </div>
 
-  <!-- Prawo: Koszyk -->
   <button class="cart-btn" onclick="openCart()">
     🛒 Koszyk <span class="cart-badge" id="cartCount">0</span>
   </button>
@@ -528,7 +516,6 @@
       </div>
 
       <div class="menu-list">
-        <!-- PRZYKŁADOWE MENU DNIA -->
         <div class="menu-item">
           <div class="menu-left">
             <span class="menu-number">1</span>
@@ -627,13 +614,25 @@
       <h3>🛒 Twój Koszyk</h3>
       <button class="cart-modal-close" onclick="closeCart()">✕</button>
     </div>
-    <div class="cart-items-list" id="cartItemsList">
-      <!-- Dania pojawią się tu dynamicznie -->
-    </div>
-    <p style="text-align: right; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">
+    <div class="cart-items-list" id="cartItemsList"></div>
+
+    <p style="text-align: right; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">
       Suma: <span id="cartTotal" style="color: var(--primary-color);">0 zł</span>
     </p>
-    <a href="tel:727638831" class="btn btn-call" style="width: 100%;">📞 Złóż zamówienie telefonicznie</a>
+
+    <!-- OPCJE PŁATNOŚCI -->
+    <div class="payment-options">
+      <div style="font-weight: bold; margin-bottom: 8px;">Wybierz metodę płatności:</div>
+      <label>
+        <input type="radio" name="paymentMethod" value="unpaid" checked> 💵 Płatność przy odbiorze (Nieopłacone)
+      </label>
+      <label>
+        <input type="radio" name="paymentMethod" value="paid"> 💳 Płatność online (Opłacone)
+      </label>
+    </div>
+
+    <!-- POPRAWIONY PRZYCISK: TYLKO ZŁÓŻ ZAMÓWIENIE -->
+    <button onclick="submitOrder()" class="btn btn-call" style="width: 100%;">🛍️ Złóż zamówienie</button>
   </div>
 </div>
 
@@ -642,7 +641,6 @@
 </footer>
 
 <script>
-  // MOTYW JASNY / CIEMNY
   const themeToggleBtn = document.getElementById('themeToggle');
   const savedTheme = localStorage.getItem('theme');
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -663,7 +661,6 @@
     localStorage.setItem('theme', newTheme);
   });
 
-  // WCZYTYWANIE DANYCH Z ADMINA
   function loadDynamicMenu() {
     const savedSoup = localStorage.getItem('promoSoup');
     const savedDrink = localStorage.getItem('promoDrink');
@@ -695,7 +692,6 @@
     }
   }
 
-  // LOGIKA KOSZYKA
   let cart = [];
 
   function addToCart(name, price) {
@@ -710,10 +706,8 @@
 
   function updateCartUI() {
     document.getElementById('cartCount').textContent = cart.length;
-
     const list = document.getElementById('cartItemsList');
     list.innerHTML = '';
-
     let total = 0;
 
     if (cart.length === 0) {
@@ -722,7 +716,6 @@
       cart.forEach((item, index) => {
         const numericPrice = parseInt(item.price) || 0;
         total += numericPrice;
-
         const row = document.createElement('div');
         row.className = 'cart-item-row';
         row.innerHTML = `
@@ -739,12 +732,40 @@
     document.getElementById('cartTotal').textContent = total + ' zł';
   }
 
-  function openCart() {
-    document.getElementById('cartModal').style.display = 'flex';
-  }
+  function openCart() { document.getElementById('cartModal').style.display = 'flex'; }
+  function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
 
-  function closeCart() {
-    document.getElementById('cartModal').style.display = 'none';
+  function submitOrder() {
+    if (cart.length === 0) {
+      alert("Koszyk jest pusty! Dodaj najpierw dania.");
+      return;
+    }
+
+    const paymentStatus = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
+    let totalSum = 0;
+
+    const itemNames = cart.map(item => {
+      totalSum += parseInt(item.price) || 0;
+      return item.name;
+    });
+
+    const newOrder = {
+      id: Math.floor(1000 + Math.random() * 9000),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      items: itemNames,
+      total: totalSum,
+      paid: (paymentStatus === 'paid')
+    };
+
+    activeOrders.push(newOrder);
+    localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
+
+    cart = [];
+    updateCartUI();
+    closeCart();
+
+    alert("Zamówienie zostało złożone pomyślnie!");
   }
 
   document.addEventListener('DOMContentLoaded', () => {
