@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Administratora | Czas na obiad</title>
-
   <!-- FAVICON (LOGO CZAS NA OBIAD) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' rx='40' fill='%231e293b'/><circle cx='100' cy='90' r='60' fill='none' stroke='%23d97706' stroke-width='6'/><path d='M80 75 Q100 55 120 75 Q100 95 80 75 Z' fill='%23d97706'/><path d='M75 115 C75 110 125 110 125 115 L120 140 C120 145 80 145 80 140 Z' fill='%23f59e0b'/><rect x='85' y='100' width='6' height='15' rx='3' fill='%23fbbf24'/><rect x='97' y='95' width='6' height='20' rx='3' fill='%23fbbf24'/><rect x='109' y='100' width='6' height='15' rx='3' fill='%23fbbf24'/><text x='100' y='175' font-family='Arial, sans-serif' font-weight='bold' font-size='16' text-anchor='middle' fill='%23f8fafc'>CZAS NA OBIAD</text></svg>">
-
   <style>
     :root {
       --primary: #d97706;
@@ -20,14 +18,12 @@
       --success: #10b981;
       --danger: #ef4444;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
-
     body {
       background-color: var(--bg);
       color: var(--text);
@@ -35,7 +31,6 @@
       display: flex;
       flex-direction: column;
     }
-
     header {
       background: rgba(30, 41, 59, 0.8);
       backdrop-filter: blur(10px);
@@ -45,25 +40,21 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .header-brand {
       display: flex;
       align-items: center;
       gap: 15px;
     }
-
     .header-logo {
       width: 45px;
       height: 45px;
       border-radius: 10px;
     }
-
     .header-logo svg {
       width: 100%;
       height: 100%;
       border-radius: 10px;
     }
-
     /* LOGOWANIE */
     .login-container {
       max-width: 400px;
@@ -74,7 +65,6 @@
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
-
     .dashboard {
       display: none;
       max-width: 1100px;
@@ -82,7 +72,6 @@
       padding: 0 20px;
       width: 100%;
     }
-
     .nav-tabs {
       display: flex;
       gap: 10px;
@@ -90,7 +79,6 @@
       border-bottom: 1px solid var(--border);
       padding-bottom: 10px;
     }
-
     .tab-btn {
       background: transparent;
       border: 1px solid var(--border);
@@ -102,18 +90,15 @@
       font-size: 1rem;
       transition: all 0.2s;
     }
-
     .tab-btn.active {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
     }
-
     .tab-btn:hover:not(.active) {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text);
     }
-
     .tab-content {
       display: none;
       background: var(--card-bg);
@@ -121,22 +106,18 @@
       border-radius: 16px;
       padding: 25px;
     }
-
     .tab-content.active {
       display: block;
     }
-
     .form-group {
       margin-bottom: 20px;
     }
-
     label {
       display: block;
       margin-bottom: 8px;
       color: var(--text-muted);
       font-size: 0.9rem;
     }
-
     input {
       width: 100%;
       padding: 12px;
@@ -146,22 +127,18 @@
       color: var(--text);
       font-size: 1rem;
     }
-
     input:focus {
       outline: none;
       border-color: var(--primary);
     }
-
     /* POLE HASŁA + OCZKO */
     .password-wrapper {
       position: relative;
       width: 100%;
     }
-
     .password-wrapper input {
       padding-right: 50px;
     }
-
     .password-toggle {
       position: absolute;
       right: 10px;
@@ -176,12 +153,10 @@
       line-height: 1;
       transition: color 0.2s, transform 0.2s;
     }
-
     .password-toggle:hover {
       color: var(--text);
       transform: translateY(-50%) scale(1.08);
     }
-
     .btn {
       background: var(--primary);
       color: white;
@@ -192,41 +167,32 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .btn:hover {
       background: var(--primary-hover);
     }
-
     .btn-danger {
       background: var(--danger);
     }
-
     .btn-danger:hover {
       background: #dc2626;
     }
-
     .btn-success {
       background: var(--success);
     }
-
     .btn-success:hover {
       background: #059669;
     }
-
     .dish-row {
       display: flex;
       gap: 10px;
       margin-bottom: 10px;
     }
-
     .dish-row input[type="text"] {
       flex: 3;
     }
-
     .dish-row input[type="number"] {
       flex: 1;
     }
-
     .order-card {
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--border);
@@ -237,23 +203,19 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .order-info h4 {
       color: var(--primary);
       margin-bottom: 5px;
     }
-
     .order-items {
       font-size: 0.95rem;
       color: var(--text-muted);
       margin-top: 5px;
     }
-
     .order-total {
       font-weight: bold;
       font-size: 1.1rem;
     }
-
     .status-badge {
       display: inline-block;
       padding: 4px 10px;
@@ -262,19 +224,16 @@
       font-weight: bold;
       margin-top: 4px;
     }
-
     .status-unpaid {
       background: rgba(239, 68, 68, 0.2);
       color: #ef4444;
       border: 1px solid #ef4444;
     }
-
     .status-paid {
       background: rgba(16, 185, 129, 0.2);
       color: #10b981;
       border: 1px solid #10b981;
     }
-
     .empty-state {
       text-align: center;
       color: var(--text-muted);
@@ -282,9 +241,7 @@
     }
   </style>
 </head>
-
 <body>
-
 <header>
   <div class="header-brand">
     <div class="header-logo">
@@ -299,687 +256,226 @@
         <text x="100" y="175" font-family="Arial, sans-serif" font-weight="bold" font-size="16" text-anchor="middle" fill="#f8fafc">CZAS NA OBIAD</text>
       </svg>
     </div>
-
     <h2>Panel Administratora</h2>
   </div>
-
-  <button id="logoutBtn" class="btn btn-danger" style="display:none;" onclick="logout()">
-    Wyloguj
-  </button>
+  <button id="logoutBtn" class="btn btn-danger" style="display:none;" onclick="logout()">Wyloguj</button>
 </header>
-
 <!-- FORMULARZ LOGOWANIA -->
 <div class="login-container" id="loginForm">
-
-  <h3 style="margin-bottom: 20px; text-align: center;">
-    Zaloguj się
-  </h3>
-
+  <h3 style="margin-bottom: 20px; text-align: center;">Zaloguj się</h3>
   <div class="form-group">
     <label>Login:</label>
-    <input
-      type="text"
-      id="usernameInput"
-      placeholder="Wpisz login"
-    >
+    <input type="text" id="usernameInput" placeholder="Wpisz login">
   </div>
-
   <div class="form-group">
     <label>Hasło dostępu:</label>
-
     <div class="password-wrapper">
-      <input
-        type="password"
-        id="passwordInput"
-        placeholder="Wpisz hasło"
-      >
-
-      <button
-        type="button"
-        class="password-toggle"
-        onclick="togglePassword()"
-        aria-label="Pokaż hasło"
-        title="Pokaż hasło"
-      >
-        👁
-      </button>
+      <input type="password" id="passwordInput" placeholder="Wpisz hasło">
+      <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Pokaż hasło" title="Pokaż hasło">👁</button>
     </div>
   </div>
-
-  <button class="btn" style="width: 100%;" onclick="login()">
-    Zaloguj
-  </button>
-
+  <button class="btn" style="width: 100%;" onclick="login()">Zaloguj</button>
 </div>
-
 <!-- PANEL DLA ZALOGOWANEGO -->
 <div class="dashboard" id="dashboard">
-
   <div class="nav-tabs">
-
-    <button
-      class="tab-btn active"
-      onclick="switchTab('tab-menu', this)"
-    >
-      📋 Okienko 1: Edycja Menu
-    </button>
-
-    <button
-      class="tab-btn"
-      onclick="switchTab('tab-orders', this)"
-    >
-      🔔 Okienko 2: Aktywne Zamówienia
-    </button>
-
-    <button
-      class="tab-btn"
-      onclick="switchTab('tab-history', this)"
-    >
-      📜 Okienko 3: Historia Zamówień
-    </button>
-
+    <button class="tab-btn active" onclick="switchTab('tab-menu', this)">📋 Okienko 1: Edycja Menu</button>
+    <button class="tab-btn" onclick="switchTab('tab-orders', this)">🔔 Okienko 2: Aktywne Zamówienia</button>
+    <button class="tab-btn" onclick="switchTab('tab-history', this)">📜 Okienko 3: Historia Zamówień</button>
   </div>
-
   <div id="tab-menu" class="tab-content active">
-
-    <h3 style="margin-bottom: 20px;">
-      Edycja Oferty Dnia
-    </h3>
-
+    <h3 style="margin-bottom: 20px;">Edycja Oferty Dnia</h3>
     <div class="form-group">
       <label>Zupa Dnia (Gratis):</label>
-
-      <input
-        type="text"
-        id="soupInput"
-        placeholder="np. Barszcz biały z makaronem"
-      >
+      <input type="text" id="soupInput" placeholder="np. Barszcz biały z makaronem">
     </div>
-
     <div class="form-group">
       <label>Napis/Promocja na dole (Gratis):</label>
-
-      <input
-        type="text"
-        id="drinkInput"
-        placeholder="np. Dla gości przy stolikach Lemoniada"
-      >
+      <input type="text" id="drinkInput" placeholder="np. Dla gości przy stolikach Lemoniada">
     </div>
-
-    <h4 style="margin: 25px 0 15px 0;">
-      Dania Główne:
-    </h4>
-
+    <h4 style="margin: 25px 0 15px 0;">Dania Główne:</h4>
     <div id="dishesList"></div>
-
-    <button
-      class="btn"
-      onclick="addDishRow()"
-      style="margin-bottom: 20px; background: #334155;"
-    >
-      ➕ Dodaj kolejne danie
-    </button>
-
+    <button class="btn" onclick="addDishRow()" style="margin-bottom: 20px; background: #334155;">➕ Dodaj kolejne danie</button>
     <br>
-
-    <button
-      class="btn btn-success"
-      onclick="saveMenu()"
-      style="width: 100%; font-size: 1.1rem;"
-    >
-      💾 Zapisz zmiany w Menu
-    </button>
-
+    <button class="btn btn-success" onclick="saveMenu()" style="width: 100%; font-size: 1.1rem;">💾 Zapisz zmiany w Menu</button>
   </div>
-
   <div id="tab-orders" class="tab-content">
-
-    <h3 style="margin-bottom: 20px;">
-      Złożone Zamówienia (Strona Główna)
-    </h3>
-
+    <h3 style="margin-bottom: 20px;">Złożone Zamówienia (Strona Główna)</h3>
     <div id="activeOrdersList"></div>
-
   </div>
-
   <div id="tab-history" class="tab-content">
-
-    <h3 style="margin-bottom: 20px;">
-      Archiwum Zrealizowanych Zamówień
-    </h3>
-
+    <h3 style="margin-bottom: 20px;">Archiwum Zrealizowanych Zamówień</h3>
     <div id="historyOrdersList"></div>
-
   </div>
-
 </div>
-
 <script>
-
   // WYMAGANE DANE DO LOGOWANIA
   const ADMIN_USER = "czas123";
   const ADMIN_PASS = "hasło123!";
-
-
   // POKAŻ / UKRYJ HASŁO
   function togglePassword() {
-
-    const passwordInput =
-      document.getElementById('passwordInput');
-
-    const toggleButton =
-      document.querySelector('.password-toggle');
-
+    const passwordInput = document.getElementById('passwordInput');
+    const toggleButton = document.querySelector('.password-toggle');
     if (passwordInput.type === 'password') {
-
       passwordInput.type = 'text';
-
       toggleButton.textContent = '🙈';
-
-      toggleButton.setAttribute(
-        'aria-label',
-        'Ukryj hasło'
-      );
-
+      toggleButton.setAttribute('aria-label', 'Ukryj hasło');
       toggleButton.title = 'Ukryj hasło';
-
     } else {
-
       passwordInput.type = 'password';
-
       toggleButton.textContent = '👁';
-
-      toggleButton.setAttribute(
-        'aria-label',
-        'Pokaż hasło'
-      );
-
+      toggleButton.setAttribute('aria-label', 'Pokaż hasło');
       toggleButton.title = 'Pokaż hasło';
-
     }
-
   }
-
-
   // LOGOWANIE
   function login() {
-
-    const user =
-      document.getElementById('usernameInput').value;
-
-    const pass =
-      document.getElementById('passwordInput').value;
-
-
-    if (
-      user === ADMIN_USER &&
-      pass === ADMIN_PASS
-    ) {
-
-      document.getElementById('loginForm').style.display =
-        'none';
-
-      document.getElementById('dashboard').style.display =
-        'block';
-
-      document.getElementById('logoutBtn').style.display =
-        'block';
-
+    const user = document.getElementById('usernameInput').value;
+    const pass = document.getElementById('passwordInput').value;
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'block';
       loadMenuForm();
-
       loadOrders();
-
     } else {
-
       alert('Nieprawidłowy login lub hasło!');
-
     }
-
   }
-
-
   // WYLOGOWANIE
   function logout() {
     location.reload();
   }
-
-
   // PRZEŁĄCZANIE ZAKŁADEK
   function switchTab(tabId, btn) {
-
-    document
-      .querySelectorAll('.tab-btn')
-      .forEach(b => b.classList.remove('active'));
-
-    document
-      .querySelectorAll('.tab-content')
-      .forEach(c => c.classList.remove('active'));
-
-
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
-
-    document
-      .getElementById(tabId)
-      .classList.add('active');
-
-
-    if (
-      tabId === 'tab-orders' ||
-      tabId === 'tab-history'
-    ) {
-
+    document.getElementById(tabId).classList.add('active');
+    if (tabId === 'tab-orders' || tabId === 'tab-history') {
       loadOrders();
-
     }
-
   }
-
-
   // ŁADOWANIE MENU
   function loadMenuForm() {
-
-    document.getElementById('soupInput').value =
-      localStorage.getItem('promoSoup') ||
-      'Barszcz biały z makaronem';
-
-    document.getElementById('drinkInput').value =
-      localStorage.getItem('promoDrink') ||
-      'Dla gości przy stolikach Lemoniada';
-
-
-    const dishes =
-      JSON.parse(
-        localStorage.getItem('menuDishes')
-      ) || [
-
-        {
-          name: 'Placek po zbójnicku',
-          price: '21 zł'
-        },
-
-        {
-          name: 'Roladki drobiowe z porem',
-          price: '22 zł'
-        },
-
-        {
-          name: 'Mielone na liściu kapusty',
-          price: '21 zł'
-        }
-
-      ];
-
-
-    const container =
-      document.getElementById('dishesList');
-
+    document.getElementById('soupInput').value = localStorage.getItem('promoSoup') || 'Barszcz biały z makaronem';
+    document.getElementById('drinkInput').value = localStorage.getItem('promoDrink') || 'Dla gości przy stolikach Lemoniada';
+    const dishes = JSON.parse(localStorage.getItem('menuDishes')) || [
+      { name: 'Placek po zbójnicku', price: '21 zł' },
+      { name: 'Roladki drobiowe z porem', price: '22 zł' },
+      { name: 'Mielone na liściu kapusty', price: '21 zł' }
+    ];
+    const container = document.getElementById('dishesList');
     container.innerHTML = '';
-
-
-    dishes.forEach(dish =>
-      addDishRow(
-        dish.name,
-        parseInt(dish.price)
-      )
-    );
-
+    dishes.forEach(dish => addDishRow(dish.name, parseInt(dish.price)));
   }
-
-
   // DODAWANIE DANIA
-  function addDishRow(
-    name = '',
-    price = ''
-  ) {
-
-    const container =
-      document.getElementById('dishesList');
-
-    const row =
-      document.createElement('div');
-
+  function addDishRow(name = '', price = '') {
+    const container = document.getElementById('dishesList');
+    const row = document.createElement('div');
     row.className = 'dish-row';
-
-
     row.innerHTML = `
-
-      <input
-        type="text"
-        placeholder="Nazwa dania"
-        value="${name}"
-      >
-
-      <input
-        type="number"
-        placeholder="Cena (zł)"
-        value="${price}"
-      >
-
-      <button
-        class="btn btn-danger"
-        onclick="this.parentElement.remove()"
-      >
-        🗑️
-      </button>
-
+      <input type="text" placeholder="Nazwa dania" value="${name}">
+      <input type="number" placeholder="Cena (zł)" value="${price}">
+      <button class="btn btn-danger" onclick="this.parentElement.remove()">🗑️</button>
     `;
-
-
     container.appendChild(row);
-
   }
-
-
   // ZAPIS MENU
   function saveMenu() {
-
-    const soup =
-      document.getElementById('soupInput').value;
-
-    const drink =
-      document.getElementById('drinkInput').value;
-
-    const rows =
-      document.querySelectorAll('.dish-row');
-
-
+    const soup = document.getElementById('soupInput').value;
+    const drink = document.getElementById('drinkInput').value;
+    const rows = document.querySelectorAll('.dish-row');
     const dishes = [];
-
-
     rows.forEach(row => {
-
-      const inputs =
-        row.querySelectorAll('input');
-
-
-      if (
-        inputs[0].value.trim() !== ''
-      ) {
-
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value.trim() !== '') {
         dishes.push({
-
           name: inputs[0].value,
-
-          price:
-            inputs[1].value + ' zł'
-
+          price: inputs[1].value + ' zł'
         });
-
       }
-
     });
-
-
-    localStorage.setItem(
-      'promoSoup',
-      soup
-    );
-
-    localStorage.setItem(
-      'promoDrink',
-      drink
-    );
-
-    localStorage.setItem(
-      'menuDishes',
-      JSON.stringify(dishes)
-    );
-
-
-    alert(
-      'Menu zostało zaktualizowane!'
-    );
-
+    localStorage.setItem('promoSoup', soup);
+    localStorage.setItem('promoDrink', drink);
+    localStorage.setItem('menuDishes', JSON.stringify(dishes));
+    alert('Menu zostało zaktualizowane!');
   }
-
-
   // ŁADOWANIE ZAMÓWIEŃ
   function loadOrders() {
-
-    const activeContainer =
-      document.getElementById(
-        'activeOrdersList'
-      );
-
-    const historyContainer =
-      document.getElementById(
-        'historyOrdersList'
-      );
-
-
-    const activeOrders =
-      JSON.parse(
-        localStorage.getItem('activeOrders')
-      ) || [];
-
-
-    const historyOrders =
-      JSON.parse(
-        localStorage.getItem('historyOrders')
-      ) || [];
-
-
+    const activeContainer = document.getElementById('activeOrdersList');
+    const historyContainer = document.getElementById('historyOrdersList');
+    const activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
+    const historyOrders = JSON.parse(localStorage.getItem('historyOrders')) || [];
     // AKTYWNE ZAMÓWIENIA
     if (activeOrders.length === 0) {
-
-      activeContainer.innerHTML =
-        '<div class="empty-state">Brak aktywnych zamówień.</div>';
-
+      activeContainer.innerHTML = '<div class="empty-state">Brak aktywnych zamówień.</div>';
     } else {
-
       activeContainer.innerHTML = '';
-
-
-      activeOrders.forEach(
-        (order, index) => {
-
-          const statusHtml =
-            order.paid
-
-              ? '<span class="status-badge status-paid">OPŁACONE</span>'
-
-              : '<span class="status-badge status-unpaid">NIEOPŁACONE</span>';
-
-
-          const payBtn =
-            !order.paid
-
-              ? `
-                <button
-                  class="btn"
-                  style="
-                    background:#0284c7;
-                    font-size:0.85rem;
-                    margin-right:5px;
-                  "
-                  onclick="markAsPaid(${index})"
-                >
-                  💲 Oznacz jako opłacone
-                </button>
-              `
-
-              : '';
-
-
-          activeContainer.innerHTML += `
-
-            <div class="order-card">
-
-              <div class="order-info">
-
-                <h4>
-                  Zamówienie #${order.id}
-                  (${order.time})
-                </h4>
-
-                <div class="order-items">
-                  ${order.items.join(', ')}
-                </div>
-
-                <div>
-                  ${statusHtml}
-                </div>
-
-              </div>
-
-
-              <div style="text-align: right;">
-
-                <div class="order-total">
-                  ${order.total} zł
-                </div>
-
-                <div style="margin-top: 10px;">
-
-                  ${payBtn}
-
-                  <button
-                    class="btn btn-success"
-                    style="font-size:0.85rem;"
-                    onclick="completeOrder(${index})"
-                  >
-                    ✔ Zrealizuj
-                  </button>
-
-                </div>
-
-              </div>
-
+      activeOrders.forEach((order, index) => {
+        const statusHtml = order.paid
+          ? '<span class="status-badge status-paid">OPŁACONE</span>'
+          : '<span class="status-badge status-unpaid">NIEOPŁACONE</span>';
+        const payBtn = !order.paid
+          ? `<button class="btn" style="background:#0284c7; font-size:0.85rem; margin-right:5px;" onclick="markAsPaid(${index})">💲 Oznacz jako opłacone</button>`
+          : '';
+        activeContainer.innerHTML += `
+          <div class="order-card">
+            <div class="order-info">
+              <h4>Zamówienie #${order.id} (${order.time})</h4>
+              <div class="order-items">${order.items.join(', ')}</div>
+              <div>${statusHtml}</div>
             </div>
-
-          `;
-
-        }
-      );
-
+            <div style="text-align: right;">
+              <div class="order-total">${order.total} zł</div>
+              <div style="margin-top: 10px;">
+                ${payBtn}
+                <button class="btn btn-success" style="font-size:0.85rem;" onclick="completeOrder(${index})">✔ Zrealizuj</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
     }
-
-
     // HISTORIA ZAMÓWIEŃ
     if (historyOrders.length === 0) {
-
-      historyContainer.innerHTML =
-        '<div class="empty-state">Brak historii zamówień.</div>';
-
+      historyContainer.innerHTML = '<div class="empty-state">Brak historii zamówień.</div>';
     } else {
-
       historyContainer.innerHTML = '';
-
-
       historyOrders.forEach(order => {
-
-        const statusHtml =
-          order.paid
-
-            ? '<span class="status-badge status-paid">OPŁACONE</span>'
-
-            : '<span class="status-badge status-unpaid">NIEOPŁACONE</span>';
-
-
+        const statusHtml = order.paid
+          ? '<span class="status-badge status-paid">OPŁACONE</span>'
+          : '<span class="status-badge status-unpaid">NIEOPŁACONE</span>';
         historyContainer.innerHTML += `
-
-          <div
-            class="order-card"
-            style="opacity: 0.85;"
-          >
-
+          <div class="order-card" style="opacity: 0.85;">
             <div class="order-info">
-
-              <h4>
-                Zamówienie #${order.id}
-                — Zrealizowano
-              </h4>
-
-              <div class="order-items">
-                ${order.items.join(', ')}
-              </div>
-
-              <div>
-                ${statusHtml}
-              </div>
-
+              <h4>Zamówienie #${order.id} — Zrealizowano</h4>
+              <div class="order-items">${order.items.join(', ')}</div>
+              <div>${statusHtml}</div>
             </div>
-
-
-            <div class="order-total">
-              ${order.total} zł
-            </div>
-
+            <div class="order-total">${order.total} zł</div>
           </div>
-
         `;
-
       });
-
     }
-
   }
-
-
   // OZNACZENIE JAKO OPŁACONE
   function markAsPaid(index) {
-
-    let activeOrders =
-      JSON.parse(
-        localStorage.getItem('activeOrders')
-      ) || [];
-
-
+    let activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
     activeOrders[index].paid = true;
-
-
-    localStorage.setItem(
-      'activeOrders',
-      JSON.stringify(activeOrders)
-    );
-
-
+    localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
     loadOrders();
-
   }
-
-
   // REALIZACJA ZAMÓWIENIA
   function completeOrder(index) {
-
-    let activeOrders =
-      JSON.parse(
-        localStorage.getItem('activeOrders')
-      ) || [];
-
-
-    let historyOrders =
-      JSON.parse(
-        localStorage.getItem('historyOrders')
-      ) || [];
-
-
-    const completed =
-      activeOrders.splice(index, 1)[0];
-
-
-    historyOrders.unshift(
-      completed
-    );
-
-
-    localStorage.setItem(
-      'activeOrders',
-      JSON.stringify(activeOrders)
-    );
-
-
-    localStorage.setItem(
-      'historyOrders',
-      JSON.stringify(historyOrders)
-    );
-
-
+    let activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
+    let historyOrders = JSON.parse(localStorage.getItem('historyOrders')) || [];
+    const completed = activeOrders.splice(index, 1)[0];
+    historyOrders.unshift(completed);
+    localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
+    localStorage.setItem('historyOrders', JSON.stringify(historyOrders));
     loadOrders();
-
   }
-
 </script>
-
 </body>
 </html>
