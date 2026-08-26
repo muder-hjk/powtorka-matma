@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Czas na obiad | Domowa Jadłodajnia Osiek Wielki</title>
+  <title>Czas na obiad — Domowe posiłki w Osieku Wielkim</title>
 
-  <!-- FAVICON (LOGO CZAS NA OBIAD) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' rx='40' fill='%231e293b'/><circle cx='100' cy='90' r='60' fill='none' stroke='%23d97706' stroke-width='6'/><path d='M80 75 Q100 55 120 75 Q100 95 80 75 Z' fill='%23d97706'/><path d='M75 115 C75 110 125 110 125 115 L120 140 C120 145 80 145 80 140 Z' fill='%23f59e0b'/><rect x='85' y='100' width='6' height='15' rx='3' fill='%23fbbf24'/><rect x='97' y='95' width='6' height='20' rx='3' fill='%23fbbf24'/><rect x='109' y='100' width='6' height='15' rx='3' fill='%23fbbf24'/><text x='100' y='175' font-family='Arial, sans-serif' font-weight='bold' font-size='16' text-anchor='middle' fill='%23f8fafc'>CZAS NA OBIAD</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><circle cx='100' cy='100' r='96' fill='%23ffffff' stroke='%23d4af37' stroke-width='8'/><text x='100' y='48' font-family='serif' font-size='22' font-weight='bold' fill='%231f2937' text-anchor='middle'>Czas</text><text x='100' y='72' font-family='serif' font-size='22' font-weight='bold' fill='%231f2937' text-anchor='middle'>na obiad</text><path d='M75 110 Q70 95 80 85 Q75 100 85 105' fill='none' stroke='%231f2937' stroke-width='3.5' stroke-linecap='round'/><path d='M72 138 C72 120 128 120 128 138 Z' fill='%231f2937'/><rect x='93' y='114' width='14' height='6' rx='2' fill='%231f2937'/><rect x='58' y='148' width='84' height='30' rx='4' fill='%231f2937'/><rect x='58' y='148' width='14' height='30' fill='%23ffffff'/><rect x='50' y='152' width='8' height='10' rx='2' fill='%231f2937'/><rect x='142' y='152' width='8' height='10' rx='2' fill='%231f2937'/></svg>">
+
+  <script src="https://js.stripe.com/v3/"></script>
 
   <style>
     :root {
@@ -14,16 +15,13 @@
       --primary-hover: #b45309;
       --accent-color: #fbbf24;
       --google-blue: #4285F4;
-
       --bg-body: #fdfbf7;
-      --bg-card: rgba(255, 255, 255, 0.85);
-      --bg-nav: rgba(255, 255, 255, 0.85);
-      --border-card: rgba(229, 231, 235, 0.6);
+      --bg-card: transparent;
+      --bg-nav: rgba(255, 255, 255, .35);
+      --border-card: rgba(229, 231, 235, .6);
       --text-main: #1f2937;
       --text-muted: #4b5563;
       --footer-bg: #111827;
-      --shadow-liquid: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-      --shadow-hover: 0 20px 35px -10px rgba(217, 119, 6, 0.2);
       --tag-bg: #fef3c7;
       --tag-text: #92400e;
       --promo-bg: #eff6ff;
@@ -31,186 +29,82 @@
       --promo-text: #1e40af;
     }
 
-    [data-theme="dark"] {
-      --bg-body: #0f172a;
-      --bg-card: rgba(30, 41, 59, 0.75);
-      --bg-nav: rgba(15, 23, 42, 0.85);
-      --border-card: rgba(255, 255, 255, 0.1);
-      --text-main: #f8fafc;
-      --text-muted: #cbd5e1;
-      --footer-bg: #020617;
-      --shadow-liquid: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-      --shadow-hover: 0 20px 35px -10px rgba(245, 158, 11, 0.25);
-      --tag-bg: rgba(245, 158, 11, 0.15);
-      --tag-text: #fbbf24;
-      --promo-bg: rgba(30, 58, 138, 0.3);
-      --promo-border: #60a5fa;
-      --promo-text: #93c5fd;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
     html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--bg-body);
-      color: var(--text-main);
-      line-height: 1.6;
-      overflow-x: hidden;
-      padding-top: 70px;
-    }
+    body { background: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; padding-top: 70px; }
+    button, input { font-family: inherit; }
 
     .top-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: var(--bg-nav);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-card);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 25px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: fixed; top: 0; left: 0; right: 0; height: 70px;
+      background: var(--bg-nav); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, .3); z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.04);
     }
+    .top-nav-left { display: flex; align-items: center; gap: 18px; }
+    .nav-logo { width: 48px; height: 48px; border-radius: 50%; cursor: pointer; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15); flex-shrink: 0; }
+    .nav-logo svg { width: 100%; height: 100%; }
 
-    .nav-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      cursor: pointer;
+    .social-links { display: flex; align-items: center; gap: 12px; }
+    .social-link { display: flex; align-items: center; justify-content: center; color: #1f2937; transition: transform .15s ease, opacity .15s ease; text-decoration: none; }
+    .social-link:hover { transform: scale(1.15); opacity: .75; }
+    .social-link svg { width: 22px; height: 22px; fill: currentColor; }
+
+    .cart-btn-icon {
+      background: none; border: none; cursor: pointer; position: relative;
+      display: flex; align-items: center; justify-content: center; padding: 6px; transition: transform .15s ease;
     }
-
-    .nav-logo svg { width: 100%; height: 100%; border-radius: 12px; }
-
-    .theme-toggle-btn {
-      background: rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border-card);
-      color: var(--text-main);
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-
-    [data-theme="dark"] .theme-toggle-btn { background: rgba(255, 255, 255, 0.1); }
-    .theme-toggle-btn:hover { transform: scale(1.1) rotate(15deg); }
-
-    .cart-btn {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 25px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
-    }
-
-    .cart-btn:hover { background: var(--primary-hover); transform: scale(1.05); }
+    .cart-btn-icon:hover { transform: scale(1.08); }
+    .cart-icon-svg { width: 36px; height: 36px; fill: none; stroke: #27170c; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
     .cart-badge {
-      background: white;
-      color: var(--primary-color);
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 800;
+      position: absolute; top: -2px; right: -6px; background: #0b7936; color: white;
+      border-radius: 50%; min-width: 22px; height: 22px; padding: 0 4px;
+      display: none; align-items: center; justify-content: center; font-size: .78rem; font-weight: 800;
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
     }
+    .cart-badge.active { display: flex; }
 
     header {
-      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-      url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat fixed;
-      color: white;
-      text-align: center;
-      padding: 60px 20px 50px;
+      background: linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)), url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat fixed;
+      color: white; text-align: center; padding: 90px 20px 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
+    header h1 { font-size: 3.5rem; margin-bottom: 12px; }
+    header p { font-size: 1.35rem; margin-bottom: 25px; font-weight: 300; }
 
-    header h1 { font-size: 2.8rem; margin-bottom: 8px; letter-spacing: 1px; }
-    header p { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; opacity: 0.9; }
+    .header-logo { width: 140px; height: 140px; margin-bottom: 15px; animation: slowBounce 2.8s ease-in-out infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); border-radius: 50%; }
+    .header-logo svg { width: 100%; height: 100%; }
+
+    @keyframes slowBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
 
     .rating-badge {
-      background-color: var(--accent-color);
-      color: #1f2937;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 22px;
-      border-radius: 30px;
-      font-weight: bold;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+      background: var(--accent-color); color: #1f2937; display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 26px; border-radius: 30px; font-weight: bold; font-size: 1.05rem; text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform .2s ease, box-shadow .2s ease; min-height: 46px; white-space: nowrap;
     }
+    .rating-badge:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
 
-    .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 35px;
-    }
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+    .card { background: transparent; padding: 10px 0; margin-bottom: 20px; border: none; box-shadow: none; text-align: center; }
 
-    @media (max-width: 768px) {
-      .container { grid-template-columns: 1fr; }
-      header h1 { font-size: 2.1rem; }
-    }
-
-    .card {
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: var(--shadow-liquid);
-      margin-bottom: 30px;
-      border: 1px solid var(--border-card);
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    h2 {
+    h2, .menu-header-title {
+      font-size: 2.2rem;
+      font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 20px;
+      text-align: center;
       border-bottom: 3px solid var(--primary-color);
       padding-bottom: 8px;
-      display: inline-block;
-      font-size: 1.5rem;
+      margin: 0 auto 25px auto;
+      width: fit-content;
     }
 
     .promo-banner {
-      background-color: var(--promo-bg);
-      border: 2px dashed var(--promo-border);
-      color: var(--promo-text);
+      background: #fefce8;
+      border: 2px dashed #f59e0b;
+      color: #78350f;
       padding: 16px 20px;
       border-radius: 14px;
       margin-bottom: 25px;
@@ -218,559 +112,750 @@
       align-items: center;
       justify-content: space-between;
       gap: 15px;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 1.1rem;
+      text-align: left;
     }
 
-    .promo-banner .badge-free {
-      background: var(--primary-color);
-      color: white;
-      padding: 4px 12px;
+    .badge-free {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 99, 132, 0.55),
+        rgba(255, 205, 86, 0.55),
+        rgba(75, 192, 192, 0.55),
+        rgba(54, 162, 235, 0.55),
+        rgba(153, 102, 255, 0.55)
+      );
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      color: #1f2937;
+      padding: 6px 16px;
       border-radius: 20px;
       font-size: 0.9rem;
-      text-transform: uppercase;
+      font-weight: 800;
       letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
     }
 
-    .menu-list { display: flex; flex-direction: column; gap: 12px; }
+    .menu-list { display: flex; flex-direction: column; gap: 20px; max-width: 900px; margin: 0 auto; }
+
+    .dodatki-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .separator-lub {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 10px);
+      font-weight: bold;
+      color: #000000;
+      background: #ffffff;
+      padding: 0 10px;
+      z-index: 10;
+    }
 
     .menu-item {
+      position: relative;
       display: flex;
+      flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      background: rgba(0, 0, 0, 0.02);
-      padding: 16px 20px;
-      border-radius: 14px;
-      border: 1px solid var(--border-card);
-      gap: 15px;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+      gap: 20px;
+    }
+    .menu-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
-    [data-theme="dark"] .menu-item { background: rgba(255, 255, 255, 0.03); }
-
-    .menu-left { display: flex; align-items: center; gap: 15px; }
+    .menu-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      flex: 1;
+    }
 
     .menu-number {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffffff;
       background: var(--primary-color);
-      color: white;
-      width: 32px;
-      height: 32px;
       border-radius: 50%;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
       flex-shrink: 0;
-      font-size: 0.95rem;
     }
 
-    .menu-title { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
-    .menu-right { display: flex; align-items: center; gap: 15px; }
-    .menu-price { font-size: 1.25rem; font-weight: 800; color: var(--primary-color); white-space: nowrap; }
+    /* POPRAWIONE STYLE WYNIKOWE DLA PODGLĄDU DAŃ */
+    .menu-details {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      gap: 0px;
+      margin-top: -4px; /* Podciągnięcie tekstów nieco do góry */
+    }
+
+    .menu-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #d97706;
+      line-height: 1.1;
+    }
+    .menu-price .price-val {
+      font-size: 2rem; /* Większa, bardziej widoczna cena */
+      font-weight: 800;
+    }
+
+    .menu-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.2;
+      margin-top: 8px; /* Większy odstęp od ceny wyżej */
+    }
+
+    .menu-description {
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif;
+      font-size: 1rem;
+      color: #334155;
+      line-height: 1.35;
+      font-weight: 500;
+      margin-top: 4px; /* Zmniejszony margines opisu */
+    }
 
     .btn-add-cart {
-      background: rgba(217, 119, 6, 0.15);
-      color: var(--primary-color);
-      border: 1px solid var(--primary-color);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn-add-cart:hover { background: var(--primary-color); color: white; }
-
-    .sides-section {
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-card);
-    }
-
-    .sides-section h3 {
-      font-size: 1.1rem;
-      color: var(--text-main);
-      margin-bottom: 15px;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .sides-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 12px;
-      text-align: center;
-    }
-
-    .side-item {
-      background: rgba(0, 0, 0, 0.02);
-      padding: 12px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-card);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    [data-theme="dark"] .side-item { background: rgba(255, 255, 255, 0.03); }
-    .side-name { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
-
-    .action-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 20px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
-      text-align: center;
-      cursor: pointer;
+      background: #f59e0b;
+      color: #ffffff;
       border: none;
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-    .btn-call { background-color: var(--primary-color); color: white; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
-    .btn-call:hover { background-color: var(--primary-hover); }
-    .btn-route { background-color: #059669; color: white; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
-    .btn-route:hover { background-color: #047857; }
-    .btn-google { background-color: var(--google-blue); color: white; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3); }
-    .btn-google:hover { background-color: #2563eb; }
-
-    .info-list { list-style: none; }
-    .info-list li { margin-bottom: 18px; display: flex; align-items: flex-start; font-size: 1.05rem; }
-    .info-list strong { min-width: 130px; color: var(--text-main); display: inline-block; }
-
-    .status-open {
-      color: #10b981;
-      font-weight: bold;
-      background: rgba(16, 185, 129, 0.15);
-      padding: 3px 10px;
-      border-radius: 8px;
-    }
-
-    .tag {
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.95rem;
-      margin-right: 8px;
-      margin-bottom: 10px;
-      display: inline-block;
-      font-weight: 600;
-    }
-
-    /* MODAL KOSZYKA */
-    .cart-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .cart-modal-content {
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 500px;
-      padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      position: relative;
-    }
-
-    .cart-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      border-bottom: 2px solid var(--primary-color);
-      padding-bottom: 10px;
-    }
-
-    .cart-modal-close {
-      background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer;
-    }
-
-    .cart-items-list {
-      max-height: 200px;
-      overflow-y: auto;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .cart-item-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0,0,0,0.03);
-      padding: 10px 14px;
-      border-radius: 10px;
-    }
-
-    [data-theme="dark"] .cart-item-row { background: rgba(255,255,255,0.03); }
-
-    .payment-options {
-      margin: 15px 0;
-      padding: 12px;
-      border: 1px solid var(--border-card);
-      border-radius: 12px;
-      background: rgba(0,0,0,0.02);
-    }
-
-    .payment-options label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 25px;
       cursor: pointer;
-      font-weight: 600;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      flex-shrink: 0;
+    }
+    .btn-add-cart:hover {
+      background: #d97706;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.4);
     }
 
+    .sides-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-card); }
+    .sides-section h3 { margin-bottom: 15px; text-align: center; font-size: 1.2rem; color: var(--text-main); }
+    .sides-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; text-align: center; }
+    .side-item { background: rgba(255,255,255,.8); padding: 12px 10px; border-radius: 12px; border: 1px solid var(--border-card); box-shadow: 0 2px 8px rgba(0,0,0,.02); }
+    .side-name { font-size: .95rem; font-weight: 600; }
+
+    .action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border-radius: 12px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; transition: opacity .2s; }
+    .btn:hover { opacity: .9; }
+    .btn-call { background: var(--primary-color); color: white; }
+    .btn-route { background: #059669; color: white; }
+    .btn-google { background: var(--google-blue); color: white; }
+
+    .tag { background: var(--tag-bg); color: var(--tag-text); padding: 6px 14px; border-radius: 20px; font-size: .95rem; margin-right: 8px; margin-bottom: 10px; display: inline-block; font-weight: 600; }
+
+    .addons-modal, .cart-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 3000; align-items: center; justify-content: center; padding: 20px; text-align: left; }
+    .cart-modal { z-index: 2500; }
+
+    .addons-modal-content, .cart-modal-content { width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; background: #ffffff; border: 1px solid var(--border-card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 60px rgba(0,0,0,.45); animation: modalIn .2s ease-out; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+    .addons-modal-header, .cart-modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--primary-color); padding-bottom: 12px; margin-bottom: 20px; }
+    .addons-modal-header h3, .cart-modal-header h3 { font-size: 1.3rem; }
+    .addons-modal-close, .cart-modal-close { background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .addons-modal-close:hover, .cart-modal-close:hover { background: rgba(239,68,68,.15); color: #ef4444; }
+
+    .selected-dish { background: rgba(217,119,6,.12); border: 1px solid var(--primary-color); border-radius: 12px; padding: 15px; margin-bottom: 18px; }
+    .selected-dish-name { font-size: 1.1rem; font-weight: 800; }
+    .selected-dish-price { color: var(--primary-color); font-size: 1rem; font-weight: bold; margin-top: 4px; }
+    .addons-info { color: var(--text-muted); font-size: .95rem; margin-bottom: 10px; }
+    .addons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .addon-option { border: 1px solid var(--border-card); background: rgba(0,0,0,.03); color: var(--text-main); padding: 15px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: .95rem; transition: .15s; }
+    .addon-option:hover { border-color: var(--primary-color); transform: translateY(-1px); }
+    .addon-option.selected { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+    .add-to-cart-confirm { width: 100%; background: var(--primary-color); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: opacity .2s; }
+    .add-to-cart-confirm:disabled { opacity: .45; cursor: not-allowed; }
+
+    .cart-items-list { max-height: 300px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+    .cart-item-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,.03); padding: 12px 14px; border-radius: 10px; gap: 10px; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-weight: bold; }
+    .cart-item-addons { font-size: .82rem; color: var(--text-muted); margin-top: 4px; }
+
+    .payment-options { margin: 15px 0; padding: 12px; border: 1px solid var(--border-card); border-radius: 12px; }
+    .payment-options label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; }
     .payment-options label:last-child { margin-bottom: 0; }
 
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      background-color: var(--footer-bg);
-      color: var(--text-muted);
-      margin-top: 50px;
-      font-size: 0.95rem;
+    footer { text-align: center; padding: 30px 20px; background: var(--footer-bg); color: white; margin-top: 50px; }
+
+    @media(max-width: 768px) {
+      header { padding: 70px 15px 60px; }
+      header h1 { font-size: 2.4rem; }
+      .header-logo { width: 100px; height: 100px; }
+      .menu-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+      }
+      .btn-add-cart {
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+      }
+      .addons-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width: 600px) {
+      .top-nav { padding: 0 15px; }
+      .top-nav-left { gap: 10px; }
+      .social-links { gap: 8px; }
+      .addons-modal-content, .cart-modal-content { padding: 20px; }
+      .menu-title { font-size: 1.15rem; }
+      .menu-header-title { font-size: 1.8rem; }
     }
   </style>
 </head>
 <body>
 
 <nav class="top-nav">
-  <button class="theme-toggle-btn" id="themeToggle" aria-label="Zmień tryb jasności">🌙</button>
+  <div class="top-nav-left">
+    <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Do góry">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#d4af37" stroke-width="8"/>
+        <text x="100" y="48" font-family="'Times New Roman', Georgia, serif" font-size="22" font-weight="bold" fill="#1f2937" text-anchor="middle">Czas</text>
+        <text x="100" y="72" font-family="'Times New Roman', Georgia, serif" font-size="22" font-weight="bold" fill="#1f2937" text-anchor="middle">na obiad</text>
+        <path d="M75 110 Q70 95 80 85 Q75 100 85 105" fill="none" stroke="#1f2937" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M72 138 C72 120 128 120 128 138 Z" fill="#1f2937"/>
+        <rect x="93" y="114" width="14" height="6" rx="2" fill="#1f2937"/>
+        <rect x="58" y="148" width="84" height="30" rx="4" fill="#1f2937"/>
+        <rect x="58" y="148" width="14" height="30" fill="#ffffff"/>
+        <rect x="50" y="152" width="8" height="10" rx="2" fill="#1f2937"/>
+        <rect x="142" y="152" width="8" height="10" rx="2" fill="#1f2937"/>
+      </svg>
+    </div>
 
-  <div class="nav-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <rect width="200" height="200" rx="40" fill="#1e293b"/>
-      <circle cx="100" cy="90" r="60" fill="none" stroke="#d97706" stroke-width="6"/>
-      <path d="M80 75 Q100 55 120 75 Q100 95 80 75 Z" fill="#d97706"/>
-      <path d="M75 115 C75 110 125 110 125 115 L120 140 C120 145 80 145 80 140 Z" fill="#f59e0b"/>
-      <rect x="85" y="100" width="6" height="15" rx="3" fill="#fbbf24"/>
-      <rect x="97" y="95" width="6" height="20" rx="3" fill="#fbbf24"/>
-      <rect x="109" y="100" width="6" height="15" rx="3" fill="#fbbf24"/>
-      <text x="100" y="175" font-family="Arial, sans-serif" font-weight="bold" font-size="16" text-anchor="middle" fill="#f8fafc">CZAS NA OBIAD</text>
-    </svg>
+    <div class="social-links">
+      <a href="https://www.facebook.com/p/CZAS-NA-OBIAD-100075979598863/?locale=pl_PL" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/popular/czas-na-obiad-osiek-wielki/" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://www.google.com/search?client=opera-gx&hs=Ssf&sca_esv=88955b1080c15925&sxsrf=APpeQns23POIW5nKUFUklbeJ2CjMPnZAHg:1787760228759&q=Czas+na+obiad+Opinie&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNLMwtzA2NTA1szQ2NjU1NzM3sdzAyPiKUcS5KrFYIS9RIT8pMzFFwb8gMy8zdRErVmEAeOO-90kAAAA&rldimm=16878350569335576749&tbm=lcl&hl=pl-PL&sa=X&ved=2ahUKEwjtr4Pr1b6WAxW-EhAIHSs0CcYQ9fQKegQIJRAG&biw=1491&bih=742&dpr=1.25#lkt=LocalPoiReviews" target="_blank" rel="noopener noreferrer" class="social-link" title="Opinie Google">
+        <svg viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 15.987 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
+      </a>
+    </div>
   </div>
 
-  <button class="cart-btn" onclick="openCart()">
-    🛒 Koszyk <span class="cart-badge" id="cartCount">0</span>
+  <button class="cart-btn-icon" onclick="openCart()" aria-label="Koszyk">
+    <svg class="cart-icon-svg" viewBox="0 0 24 24">
+      <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+    </svg>
+    <span class="cart-badge" id="cartCount">0</span>
   </button>
 </nav>
 
 <header>
-  <h1>Czas na obiad</h1>
-  <p>Smaczne, świeże i domowe posiłki w Osieku Wielkim</p>
-  <div class="rating-badge">
-    <span>★ 4.7 / 5</span>
-    <span style="font-weight: normal; font-size: 0.95rem;">(42 opinie w Google)</span>
+  <div class="header-logo">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#d4af37" stroke-width="8"/>
+      <text x="100" y="48" font-family="'Times New Roman', Georgia, serif" font-size="22" font-weight="bold" fill="#1f2937" text-anchor="middle">Czas</text>
+      <text x="100" y="72" font-family="'Times New Roman', Georgia, serif" font-size="22" font-weight="bold" fill="#1f2937" text-anchor="middle">na obiad</text>
+      <path d="M75 110 Q70 95 80 85 Q75 100 85 105" fill="none" stroke="#1f2937" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M72 138 C72 120 128 120 128 138 Z" fill="#1f2937"/>
+      <rect x="93" y="114" width="14" height="6" rx="2" fill="#1f2937"/>
+      <rect x="58" y="148" width="84" height="30" rx="4" fill="#1f2937"/>
+      <rect x="58" y="148" width="14" height="30" fill="#ffffff"/>
+      <rect x="50" y="152" width="8" height="10" rx="2" fill="#1f2937"/>
+      <rect x="142" y="152" width="8" height="10" rx="2" fill="#1f2937"/>
+    </svg>
   </div>
+  <h1>Czas na obiad</h1>
+  <p><strong>Smaczne, świeże i domowe posiłki w Osieku Wielkim</strong></p>
+
+  <a href="https://www.google.com/search?client=opera-gx&hs=Ssf&sca_esv=88955b1080c15925&sxsrf=APpeQns23POIW5nKUFUklbeJ2CjMPnZAHg:1787760228759&q=Czas+na+obiad+Opinie&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNLMwtzA2NTA1szQ2NjU1NzM3sdzAyPiKUcS5KrFYIS9RIT8pMzFFwb8gMy8zdRErVmEAeOO-90kAAAA&rldimm=16878350569335576749&tbm=lcl&hl=pl-PL&sa=X&ved=2ahUKEwjtr4Pr1b6WAxW-EhAIHSs0CcYQ9fQKegQIJRAG&biw=1491&bih=742&dpr=1.25#lkt=LocalPoiReviews" target="_blank" rel="noopener noreferrer" class="rating-badge">
+    <span id="animatedRatingText">★ 4.7 / 5 (42 opinie w Google)</span>
+  </a>
 </header>
 
-<div class="container">
-  <main>
-    <section class="card">
-      <h2>O naszej jadłodajni</h2>
-      <div style="margin-top: 5px;">
-        <span class="tag">🍲 Domowe Obiady</span>
-        <span class="tag">🥗 Świeże Składniki</span>
-        <span class="tag">🚗 Na Wynos i Na Miejscu</span>
-      </div>
-      <p style="margin-top: 15px; font-size: 1.1rem; color: var(--text-muted);">
-        Zapraszamy na pyszne posiłki przygotowywane codziennie ze świeżych produktów.
-        Dbamy o domowy smak i serdeczną atmosferę. Zjedz u nas na miejscu lub weź obiad na wynos!
-      </p>
+<main class="container">
+  <section class="card">
+    <h2 class="menu-header-title">Dzisiejsze menu</h2>
+    <div class="promo-banner">
+      <span id="soupBanner">Barszcz biały z makaronem gratis do każdego zamówienia!</span>
+      <span class="badge-free">GRATIS!</span>
+    </div>
 
-      <div class="action-buttons">
-        <a href="tel:727638831" class="btn btn-call">📞 Zadzwoń: 727 638 831</a>
-        <a href="https://www.google.com/maps/dir/?api=1&destination=Osiek+Wielki+130a+62-613+Osiek+Wielki" target="_blank" class="btn btn-route">🗺️ Wyznacz Trasę</a>
-      </div>
-    </section>
+    <div class="menu-list"></div>
 
-    <section class="card">
-      <h2>Aktualne Menu Dnia</h2>
-
-      <div class="promo-banner">
-        <div>🥣 Barszcz biały z makaronem</div>
-        <span class="badge-free">GRATIS!</span>
+    <div class="sides-section">
+      <h3>Dodatki do każdego dania:</h3>
+      <div class="sides-grid sides-main">
+        <div class="side-item"><span class="side-name">🥔 Puree ziemniaczane </span></div>
+        <span class="separator-lub">lub</span>
+        <div class="side-item"><span class="side-name">🌾 Kasza</span></div>
       </div>
 
-      <div class="menu-list">
-        <div class="menu-item">
-          <div class="menu-left">
-            <span class="menu-number">1</span>
-            <span class="menu-title">Placek po zbójnicku</span>
-          </div>
-          <div class="menu-right">
-            <span class="menu-price">21 zł</span>
-            <button class="btn-add-cart" onclick="addToCart('Placek po zbójnicku', '21 zł')">➕ Dodaj</button>
-          </div>
-        </div>
-
-        <div class="menu-item">
-          <div class="menu-left">
-            <span class="menu-number">2</span>
-            <span class="menu-title">Roladki drobiowe z porem</span>
-          </div>
-          <div class="menu-right">
-            <span class="menu-price">22 zł</span>
-            <button class="btn-add-cart" onclick="addToCart('Roladki drobiowe z porem', '22 zł')">➕ Dodaj</button>
-          </div>
-        </div>
-
-        <div class="menu-item">
-          <div class="menu-left">
-            <span class="menu-number">3</span>
-            <span class="menu-title">Mielone na liściu kapusty</span>
-          </div>
-          <div class="menu-right">
-            <span class="menu-price">21 zł</span>
-            <button class="btn-add-cart" onclick="addToCart('Mielone na liściu kapusty', '21 zł')">➕ Dodaj</button>
-          </div>
-        </div>
+      <h3 style="margin-top: 20px;">oraz surówki do wyboru:</h3>
+      <div class="sides-grid">
+        <div class="side-item"><span class="side-name">🥗 Surówka</span></div>
+        <div class="side-item"><span class="side-name">🥒 Mizeria</span></div>
+        <div class="side-item"><span class="side-name">🥕 Marchew z groszkiem</span></div>
+        <div class="side-item"><span class="side-name">🫜 Buraczki</span></div>
       </div>
+    </div>
 
-      <div class="sides-section">
-        <h3>Dodatki do wyboru:</h3>
-        <div class="sides-grid">
-          <div class="side-item"><span class="side-name">🥔 Puree</span></div>
-          <div class="side-item"><span class="side-name">🌾 Kasza</span></div>
-          <div class="side-item"><span class="side-name">🥗 Surówka</span></div>
-          <div class="side-item"><span class="side-name">🥒 Mizeria</span></div>
-          <div class="side-item"><span class="side-name">🥕 Marchew z groszkiem</span></div>
-          <div class="side-item"><span class="side-name">🔴 Buraczki</span></div>
-        </div>
-      </div>
+    <div class="promo-banner" style="margin-top:25px;margin-bottom:0">
+      <div id="drinkBanner">Dla gości siedzących przy stolikach DARMOWA Lemoniada!</div>
+      <span class="badge-free">GRATIS!</span>
+    </div>
+  </section>
 
-      <div class="promo-banner" style="margin-top: 25px; margin-bottom: 0;">
-        <div>🍹 Dla gości przy stolikach Lemoniada</div>
-        <span class="badge-free">GRATIS!</span>
-      </div>
-    </section>
+  <section class="card">
+    <h2>O naszej jadłodajni</h2>
+    <div><span class="tag">🍲 Domowe Obiady</span><span class="tag">🥗 Świeże Składniki</span><span class="tag">🚗 Na Wynos i Na Miejscu</span></div>
+    <p style="margin-top:15px;font-size:1.1rem;color:var(--text-muted)">Zapraszamy na pyszne posiłki przygotowywane codziennie ze świeżych produktów. Dbamy o domowy smak i serdeczną atmosferę. Zjedz u nas na miejscu lub weź obiad na wynos!</p>
+    <div class="action-buttons">
+      <a href="tel:727638831" class="btn btn-call">📞 Zadzwoń: 727 638 831</a>
+      <a href="https://www.google.com/maps/dir/?api=1&destination=Osiek+Wielki+130a+62-613+Osiek+Wielki" target="_blank" rel="noopener noreferrer" class="btn btn-route">🗺️ Wyznacz Trasę</a>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Podziel się opinią</h2>
-      <p style="margin-bottom: 20px; color: var(--text-muted);">
-        Byłeś u nas? Będzie nam bardzo miło, jeśli zostawisz swoją ocenę w Google. Pomaga nam to stale ulepszać nasze menu!
-      </p>
-      <a href="https://www.google.com/search?q=Czas+na+obiad+Osiek+Wielki#lkt=LocalPoiReviews" target="_blank" class="btn btn-google">
-        ★ Napisz opinię w Google
-      </a>
-    </section>
-  </main>
+  <section class="card">
+    <h2>Podziel się opinią</h2>
+    <p style="margin-bottom:20px;color:var(--text-muted)">Byłeś u nas? Będzie nam bardzo miło, jeśli zostawisz swoją ocenę w Google.</p>
+    <a href="https://www.google.com/search?client=opera-gx&hs=Ssf&sca_esv=88955b1080c15925&sxsrf=APpeQns23POIW5nKUFUklbeJ2CjMPnZAHg:1787760228759&q=Czas+na+obiad+Opinie&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNLMwtzA2NTA1szQ2NjU1NzM3sdzAyPiKUcS5KrFYIS9RIT8pMzFFwb8gMy8zdRErVmEAeOO-90kAAAA&rldimm=16878350569335576749&tbm=lcl&hl=pl-PL&sa=X&ved=2ahUKEwjtr4Pr1b6WAxW-EhAIHSs0CcYQ9fQKegQIJRAG&biw=1491&bih=742&dpr=1.25#lkt=LocalPoiReviews" target="_blank" rel="noopener noreferrer" class="btn btn-google">★ Napisz opinię w Google</a>
+  </section>
+</main>
 
-  <aside>
-    <section class="card">
-      <h2>Informacje</h2>
-      <ul class="info-list">
-        <li>
-          <strong>Adres:</strong>
-          <span style="color: var(--text-muted);">Osiek Wielki 130a<br>62-613 Osiek Wielki</span>
-        </li>
-        <li>
-          <strong>Telefon:</strong>
-          <a href="tel:727638831" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">727 638 831</a>
-        </li>
-        <li>
-          <strong>Godziny:</strong>
-          <div>
-            <span class="status-open">Otwarte</span><br>
-            <small style="color: var(--text-muted);">Poniedziałek – Sobota: 12:00 – 17:00</small>
-          </div>
-        </li>
-        <li>
-          <strong>Typ:</strong>
-          <span style="color: var(--text-muted);">Jadłodajnia</span>
-        </li>
-      </ul>
-    </section>
-  </aside>
+<div class="addons-modal" id="addonsModal">
+  <div class="addons-modal-content">
+    <div class="addons-modal-header">
+      <h3>🍽️ Wybierz dodatki</h3>
+      <button class="addons-modal-close" type="button" onclick="closeAddons()">✕</button>
+    </div>
+    <div class="selected-dish">
+      <div class="selected-dish-name" id="selectedDishName"></div>
+      <div class="selected-dish-price" id="selectedDishPrice"></div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div class="addons-info"><strong>Krok 1:</strong> Wybierz dodatek główny (1 z 2)</div>
+      <div class="addons-grid" id="step1Grid"></div>
+    </div>
+
+    <div>
+      <div class="addons-info"><strong>Krok 2:</strong> Wybierz surówkę / warzywo (1 z 4)</div>
+      <div class="addons-grid" id="step2Grid"></div>
+    </div>
+
+    <button class="add-to-cart-confirm" id="confirmAddToCart" type="button" onclick="confirmAddToCart()" disabled style="margin-top: 20px;">
+      🛒 Wybierz opcje w Kroku 1 i Kroku 2
+    </button>
+  </div>
 </div>
 
-<!-- OKNO MODALNE KOSZYKA -->
 <div class="cart-modal" id="cartModal">
   <div class="cart-modal-content">
     <div class="cart-modal-header">
       <h3>🛒 Twój Koszyk</h3>
-      <button class="cart-modal-close" onclick="closeCart()">✕</button>
+      <button class="cart-modal-close" type="button" onclick="closeCart()">✕</button>
     </div>
     <div class="cart-items-list" id="cartItemsList"></div>
-
-    <p style="text-align: right; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">
-      Suma: <span id="cartTotal" style="color: var(--primary-color);">0 zł</span>
-    </p>
-
-    <!-- OPCJE PŁATNOŚCI -->
+    <p style="text-align:right;font-weight:bold;font-size:1.1rem;margin-bottom:10px">Suma: <span id="cartTotal" style="color:var(--primary-color)">0 zł</span></p>
     <div class="payment-options">
-      <div style="font-weight: bold; margin-bottom: 8px;">Wybierz metodę płatności:</div>
-      <label>
-        <input type="radio" name="paymentMethod" value="unpaid" checked> 💵 Płatność przy odbiorze (Nieopłacone)
-      </label>
-      <label>
-        <input type="radio" name="paymentMethod" value="paid"> 💳 Płatność online (Opłacone)
-      </label>
+      <div style="font-weight:bold;margin-bottom:8px">Wybierz metodę płatności:</div>
+      <label><input type="radio" name="paymentMethod" value="unpaid" checked> 💵 Płatność przy odbiorze (Nieopłacone)</label>
+      <label><input type="radio" name="paymentMethod" value="paid"> 💳 Płatność online (Stripe / BLIK / Karta)</label>
     </div>
-
-    <!-- POPRAWIONY PRZYCISK: TYLKO ZŁÓŻ ZAMÓWIENIE -->
-    <button onclick="submitOrder()" class="btn btn-call" style="width: 100%;">🛍️ Złóż zamówienie</button>
+    <button id="submitOrderBtn" onclick="submitOrder()" class="btn btn-call" style="width:100%">🛍️ Złóż zamówienie</button>
   </div>
 </div>
 
 <footer>
-  <p>&copy; Czas na obiad — Osiek Wielki. Wszystkie prawa zastrzeżone.</p>
+  <p>© Czas na obiad — Osiek Wielki. Wszystkie prawa zastrzeżone.</p>
 </footer>
 
 <script>
-  const themeToggleBtn = document.getElementById('themeToggle');
-  const savedTheme = localStorage.getItem('theme');
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const stripe = Stripe('pk_test_51U8h0xF6dlqrabQnURJ6KfhYIXmx2bCFnysbcMtMpsBYcTN9ZCzmzWeEslwCCDxV956uL1nT6kGsPEaKtKlvzwme00NiE5AHAZ');
 
-  if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeToggleBtn.textContent = '☀️';
-  } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-    themeToggleBtn.textContent = '🌙';
+  const step1Options = ['🥔 Puree', '🌾 Kasza'];
+  const step2Options = ['🥗 Surówka', '🥒 Mizeria', '🥕 Marchew z groszkiem', '🔴 Buraczki'];
+
+  let selectedDish = null;
+  let selectedStep1 = null;
+  let selectedStep2 = null;
+  let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text || '');
+    return div.innerHTML;
   }
 
-  themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    let newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    themeToggleBtn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
+  const textRating = "★ 4.7 / 5 (42 opinie w Google)";
+  const textCallToAction = "Kliknij, aby napisać opinię!";
+  let isTyping = false;
 
-  function loadDynamicMenu() {
-    const savedSoup = localStorage.getItem('promoSoup');
-    const savedDrink = localStorage.getItem('promoDrink');
-    const savedDishes = JSON.parse(localStorage.getItem('menuDishes'));
+  async function typeEffect(targetText, speed = 35) {
+    const el = document.getElementById('animatedRatingText');
+    if (!el) return;
 
-    const promoBanners = document.querySelectorAll('.promo-banner div');
-    if (savedSoup && promoBanners[0]) promoBanners[0].innerHTML = `🥣 ${savedSoup}`;
-    if (savedDrink && promoBanners[1]) promoBanners[1].innerHTML = `🍹 ${savedDrink}`;
+    while (el.textContent.length > 0) {
+      el.textContent = el.textContent.slice(0, -1);
+      await new Promise(r => setTimeout(r, speed / 2));
+    }
 
-    if (savedDishes && savedDishes.length > 0) {
-      const menuList = document.querySelector('.menu-list');
-      menuList.innerHTML = '';
-
-      savedDishes.forEach((dish, index) => {
-        const itemHTML = `
-                        <div class="menu-item">
-                            <div class="menu-left">
-                                <span class="menu-number">${index + 1}</span>
-                                <span class="menu-title">${dish.name}</span>
-                            </div>
-                            <div class="menu-right">
-                                <span class="menu-price">${dish.price}</span>
-                                <button class="btn-add-cart" onclick="addToCart('${dish.name}', '${dish.price}')">➕ Dodaj</button>
-                            </div>
-                        </div>
-                    `;
-        menuList.innerHTML += itemHTML;
-      });
+    for (let i = 0; i < targetText.length; i++) {
+      el.textContent += targetText.charAt(i);
+      await new Promise(r => setTimeout(r, speed));
     }
   }
 
-  let cart = [];
+  function startRatingAnimationLoop() {
+    setInterval(async () => {
+      if (isTyping) return;
+      isTyping = true;
+      await typeEffect(textCallToAction, 35);
+      await new Promise(r => setTimeout(r, 3000));
+      await typeEffect(textRating, 35);
+      isTyping = false;
+    }, 20000);
+  }
 
-  function addToCart(name, price) {
-    cart.push({ name, price });
+  function openAddons(name, price) {
+    selectedDish = { name: name, price: price };
+    selectedStep1 = null;
+    selectedStep2 = null;
+
+    const modal = document.getElementById('addonsModal');
+    document.getElementById('selectedDishName').textContent = name;
+    document.getElementById('selectedDishPrice').textContent = price;
+
+    const step1Grid = document.getElementById('step1Grid');
+    step1Grid.innerHTML = '';
+    step1Options.forEach((option, index) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'addon-option';
+      btn.textContent = option;
+      btn.onclick = () => selectStep1(index, btn);
+      step1Grid.appendChild(btn);
+    });
+
+    const step2Grid = document.getElementById('step2Grid');
+    step2Grid.innerHTML = '';
+    step2Options.forEach((option, index) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'addon-option';
+      btn.textContent = option;
+      btn.onclick = () => selectStep2(index, btn);
+      step2Grid.appendChild(btn);
+    });
+
+    updateConfirmButton();
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function selectStep1(index, button) {
+    selectedStep1 = index;
+    document.querySelectorAll('#step1Grid .addon-option').forEach(b => b.classList.remove('selected'));
+    button.classList.add('selected');
+    updateConfirmButton();
+  }
+
+  function selectStep2(index, button) {
+    selectedStep2 = index;
+    document.querySelectorAll('#step2Grid .addon-option').forEach(b => b.classList.remove('selected'));
+    button.classList.add('selected');
+    updateConfirmButton();
+  }
+
+  function updateConfirmButton() {
+    const confirmBtn = document.getElementById('confirmAddToCart');
+    if (!confirmBtn) return;
+
+    if (selectedStep1 !== null && selectedStep2 !== null) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = '🛒 Dodaj do koszyka';
+    } else if (selectedStep1 === null && selectedStep2 === null) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = '🛒 Wybierz opcje w Kroku 1 i Kroku 2';
+    } else if (selectedStep1 === null) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = '🛒 Wybierz dodatek w Kroku 1';
+    } else {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = '🛒 Wybierz surówkę w Kroku 2';
+    }
+  }
+
+  function confirmAddToCart() {
+    if (!selectedDish || selectedStep1 === null || selectedStep2 === null) return;
+
+    const addons = [step1Options[selectedStep1], step2Options[selectedStep2]];
+    cart.push({ name: selectedDish.name, price: selectedDish.price, addons: addons });
+    saveCart();
     updateCartUI();
+    closeAddons();
+  }
+
+  function closeAddons() {
+    const modal = document.getElementById('addonsModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+    selectedDish = null;
+    selectedStep1 = null;
+    selectedStep2 = null;
+  }
+
+  function saveCart() {
+    localStorage.setItem('cartItems', JSON.stringify(cart));
   }
 
   function removeFromCart(index) {
     cart.splice(index, 1);
+    saveCart();
     updateCartUI();
   }
 
   function updateCartUI() {
-    document.getElementById('cartCount').textContent = cart.length;
+    const cartCount = document.getElementById('cartCount');
+    if (cartCount) {
+      cartCount.textContent = cart.length;
+      cartCount.classList.toggle('active', cart.length > 0);
+    }
+
     const list = document.getElementById('cartItemsList');
+    if (!list) return;
+
     list.innerHTML = '';
     let total = 0;
 
     if (cart.length === 0) {
-      list.innerHTML = '<p style="text-align:center; color: var(--text-muted);">Koszyk jest pusty.</p>';
+      list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Koszyk jest pusty.</p>';
     } else {
       cart.forEach((item, index) => {
         const numericPrice = parseInt(item.price) || 0;
         total += numericPrice;
         const row = document.createElement('div');
         row.className = 'cart-item-row';
+        const addons = item.addons && item.addons.length ? item.addons.join(', ') : 'Brak';
         row.innerHTML = `
-                        <span>${item.name}</span>
-                        <div>
-                            <strong style="margin-right: 10px;">${item.price}</strong>
-                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color: red; cursor:pointer;">🗑️</button>
-                        </div>
-                    `;
+          <div class="cart-item-info">
+            <div class="cart-item-name">${escapeHtml(item.name)}</div>
+            <div class="cart-item-addons">🍽️ Dodatki: ${escapeHtml(addons)}</div>
+          </div>
+          <div>
+            <strong style="margin-right:10px;color:var(--primary-color)">${escapeHtml(item.price)}</strong>
+            <button type="button" onclick="removeFromCart(${index})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem" title="Usuń">🗑️</button>
+          </div>`;
         list.appendChild(row);
       });
     }
 
-    document.getElementById('cartTotal').textContent = total + ' zł';
+    const totalEl = document.getElementById('cartTotal');
+    if (totalEl) totalEl.textContent = total + ' zł';
   }
 
-  function openCart() { document.getElementById('cartModal').style.display = 'flex'; }
-  function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
+  function openCart() {
+    updateCartUI();
+    const modal = document.getElementById('cartModal');
+    if (modal) modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
 
-  function submitOrder() {
+  function closeCart() {
+    const modal = document.getElementById('cartModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function submitOrder() {
     if (cart.length === 0) {
-      alert("Koszyk jest pusty! Dodaj najpierw dania.");
+      alert('Koszyk jest pusty! Dodaj najpierw dania.');
       return;
     }
 
-    const paymentStatus = document.querySelector('input[name="paymentMethod"]:checked').value;
-    const activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
-    let totalSum = 0;
+    const paymentElement = document.querySelector('input[name="paymentMethod"]:checked');
+    const paymentStatus = paymentElement ? paymentElement.value : 'unpaid';
 
-    const itemNames = cart.map(item => {
+    let totalSum = 0;
+    const items = cart.map(item => {
       totalSum += parseInt(item.price) || 0;
-      return item.name;
+      return { name: item.name, price: item.price, addons: item.addons || [] };
     });
 
     const newOrder = {
       id: Math.floor(1000 + Math.random() * 9000),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      items: itemNames,
+      items: items,
       total: totalSum,
-      paid: (paymentStatus === 'paid')
+      paid: paymentStatus === 'paid'
     };
 
-    activeOrders.push(newOrder);
-    localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
+    if (paymentStatus === 'unpaid') {
+      const activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
+      activeOrders.push(newOrder);
+      localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
 
-    cart = [];
-    updateCartUI();
-    closeCart();
+      cart = [];
+      saveCart();
+      updateCartUI();
+      closeCart();
+      alert('✅ Zamówienie zostało złożone pomyślnie!');
+      return;
+    }
 
-    alert("Zamówienie zostało złożone pomyślnie!");
+    if (paymentStatus === 'paid') {
+      const submitBtn = document.getElementById('submitOrderBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Przekierowywanie do Stripe...';
+      }
+
+      try {
+        const response = await fetch('/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cart: cart, orderId: newOrder.id })
+        });
+
+        const session = await response.json();
+        if (session.id) {
+          const activeOrders = JSON.parse(localStorage.getItem('activeOrders')) || [];
+          activeOrders.push(newOrder);
+          localStorage.setItem('activeOrders', JSON.stringify(activeOrders));
+
+          cart = [];
+          saveCart();
+
+          const result = await stripe.redirectToCheckout({ sessionId: session.id });
+          if (result.error) alert(result.error.message);
+        } else {
+          alert('Błąd podczas inicjalizacji płatności.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Nie udało się połączyć z serwerem płatności.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '🛍️ Złóż zamówienie';
+        }
+      }
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function loadDynamicMenu() {
+    const savedSoup = localStorage.getItem('promoSoup') || 'Barszcz biały z makaronem';
+    const savedDrink = localStorage.getItem('promoDrink');
+    const savedDishes = JSON.parse(localStorage.getItem('menuDishes')) || [
+      { name: 'Placek po zbójnicku', price: '21 zł', description: 'kotlet ze świni z sosem oraz wybranymi dodatkami' },
+      { name: 'Roladki drobiowe z porem', price: '22 zł', description: 'pierś z kurczaka z porem w sosie śmietanowym' },
+      { name: 'Mielone na liściu kapusty', price: '21 zł', description: 'tradycyjne mięso mielone z ziemniakami' }
+    ];
+
+    const soupBanner = document.getElementById('soupBanner');
+    const drinkBanner = document.getElementById('drinkBanner');
+
+    if (savedSoup && soupBanner) soupBanner.textContent = '' + savedSoup + ' gratis do każdego zamówienia!';
+    if (savedDrink && drinkBanner) drinkBanner.textContent = 'Dla gości siedzących przy stolikach DARMOWA ' + savedDrink + '!';
+
+    const menuList = document.querySelector('.menu-list');
+    if (!menuList) return;
+    menuList.innerHTML = '';
+
+    savedDishes.forEach((dish, index) => {
+      const item = document.createElement('div');
+      item.className = 'menu-item';
+
+      // Lewa strona (numeracja + tekst)
+      const left = document.createElement('div');
+      left.className = 'menu-left';
+
+      const number = document.createElement('div');
+      number.className = 'menu-number';
+      number.textContent = String(index + 1).padStart(2, '0') + '.';
+
+      const details = document.createElement('div');
+      details.className = 'menu-details';
+
+      const rawPrice = (dish.price || '').replace(/[^0-9]/g, '');
+      const price = document.createElement('div');
+      price.className = 'menu-price';
+      price.innerHTML = `Od <span class="price-val">${rawPrice || '0'}</span>zł`;
+
+      const title = document.createElement('div');
+      title.className = 'menu-title';
+      title.textContent = dish.name;
+
+      details.appendChild(price);
+      details.appendChild(title);
+
+      if (dish.description) {
+        const desc = document.createElement('div');
+        desc.className = 'menu-description';
+        desc.textContent = dish.description;
+        details.appendChild(desc);
+      }
+
+      left.appendChild(number);
+      left.appendChild(details);
+
+      // Prawa strona (przycisk "Zamów")
+      const button = document.createElement('button');
+      button.className = 'btn-add-cart';
+      button.type = 'button';
+      button.textContent = 'Zamów';
+
+      button.addEventListener('click', function() {
+        openAddons(dish.name, dish.price);
+      });
+
+      item.appendChild(left);
+      item.appendChild(button);
+
+      menuList.appendChild(item);
+    });
+  }
+
+  document.getElementById('addonsModal')?.addEventListener('click', function(e) { if (e.target === this) closeAddons(); });
+  document.getElementById('cartModal')?.addEventListener('click', function(e) { if (e.target === this) closeCart(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeAddons(); closeCart(); } });
+
+  window.addEventListener('storage', function(e) {
+    if (['menuDishes', 'promoSoup', 'promoDrink'].includes(e.key)) {
+      loadDynamicMenu();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
     loadDynamicMenu();
     updateCartUI();
+    startRatingAnimationLoop();
   });
 </script>
 </body>
