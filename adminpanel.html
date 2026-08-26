@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administratora | Czas na obiad</title>
+
+  <style>
+    :root {
+      --primary-color: #d97706;
+      --primary-hover: #b45309;
+      --bg-body: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.85);
+      --border-card: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --danger-color: #ef4444;
+      --success-color: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    h1, h2 {
+      margin-bottom: 20px;
+      color: var(--primary-color);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-card);
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .dish-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .dish-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-danger { background: var(--danger-color); color: white; }
+    .btn-danger:hover { opacity: 0.8; }
+
+    .btn-success { background: var(--success-color); color: white; width: 100%; justify-content: center; font-size: 1.1rem; padding: 14px; }
+    .btn-success:hover { opacity: 0.9; }
+
+    .alert {
+      display: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+
+    .alert-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    #adminContent {
+      display: none;
+    }
+
+    .header-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- EKRAN LOGOWANIA -->
+  <div id="loginSection" class="card" style="max-width: 400px; margin: 80px auto;">
+    <h2>🔐 Logowanie Admina</h2>
+    <div id="loginError" class="alert alert-danger">Błędny login lub hasło!</div>
+    <div class="form-group">
+      <label for="username">Login:</label>
+      <input type="text" id="username" placeholder="Wpisz login">
+    </div>
+    <div class="form-group">
+      <label for="password">Hasło:</label>
+      <input type="password" id="password" placeholder="Wpisz hasło">
+    </div>
+    <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="checkLogin()">Zaloguj się</button>
+  </div>
+
+  <!-- PANEL ZARZĄDZANIA MENU -->
+  <div id="adminContent">
+    <div class="header-panel">
+      <h1>⚙️ Zarządzanie Menu</h1>
+      <button class="btn btn-danger" onclick="logout()">Wyloguj 🚪</button>
+    </div>
+
+    <div id="alert" class="alert alert-success">
+      ✅ Zmiany zostały zapamiętane! Strona główna odświeży się automatycznie.
+    </div>
+
+    <div class="card">
+      <h2>Promocje Gratis</h2>
+      <div class="form-group">
+        <label>Zupa Gratis (Baner Górny):</label>
+        <input type="text" id="promoSoup" value="Barszcz biały z makaronem">
+      </div>
+      <div class="form-group">
+        <label>Napoje Gratis (Baner Dolny):</label>
+        <input type="text" id="promoDrink" value="Dla gości przy stolikach Lemoniada">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dania Główne</h2>
+      <div id="dishesContainer"></div>
+      <button type="button" class="btn btn-primary" onclick="addDishRow()" style="margin-top: 10px;">
+        ➕ Dodaj Kolejne Danie
+      </button>
+    </div>
+
+    <button type="button" class="btn btn-success" onclick="saveMenu()">
+      💾 Zapisz Zmiany w Menu
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const LOGIN_USER = "czas123";
+  const LOGIN_PASS = "hasło123!";
+
+  function checkLogin() {
+    const userVal = document.getElementById('username').value;
+    const passVal = document.getElementById('password').value;
+    const errorBox = document.getElementById('loginError');
+
+    if (userVal === LOGIN_USER && passVal === LOGIN_PASS) {
+      sessionStorage.setItem('adminLoggedIn', 'true');
+      showPanel();
+    } else {
+      errorBox.style.display = 'block';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('adminLoggedIn');
+    document.getElementById('adminContent').style.display = 'none';
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+  }
+
+  function showPanel() {
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    loadMenu();
+  }
+
+  const defaultDishes = [
+    { name: "Placek po zbójnicku", price: "21 zł" },
+    { name: "Roladki drobiowe z porem", price: "22 zł" },
+    { name: "Mielone na liściu kapusty", price: "21 zł" },
+    { name: "Udziec faszerowany", price: "22 zł" },
+    { name: "Filet drobiowy panierowany", price: "21 zł" }
+  ];
+
+  function loadMenu() {
+    const savedSoup = localStorage.getItem('promoSoup');
+    const savedDrink = localStorage.getItem('promoDrink');
+    const savedDishes = JSON.parse(localStorage.getItem('menuDishes'));
+
+    if (savedSoup) document.getElementById('promoSoup').value = savedSoup;
+    if (savedDrink) document.getElementById('promoDrink').value = savedDrink;
+
+    const dishesToLoad = savedDishes || defaultDishes;
+    const container = document.getElementById('dishesContainer');
+    container.innerHTML = '';
+
+    dishesToLoad.forEach(dish => {
+      addDishRow(dish.name, dish.price);
+    });
+  }
+
+  function addDishRow(name = '', price = '') {
+    const container = document.getElementById('dishesContainer');
+    const row = document.createElement('div');
+    row.className = 'dish-row';
+    row.innerHTML = `
+                <input type="text" placeholder="Nazwa dania" class="dish-name" value="${name}">
+                <input type="text" placeholder="Cena (np. 21 zł)" class="dish-price" value="${price}">
+                <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">🗑️</button>
+            `;
+    container.appendChild(row);
+  }
+
+  function saveMenu() {
+    const soup = document.getElementById('promoSoup').value;
+    const drink = document.getElementById('promoDrink').value;
+
+    const nameInputs = document.querySelectorAll('.dish-name');
+    const priceInputs = document.querySelectorAll('.dish-price');
+
+    const dishes = [];
+    for(let i = 0; i < nameInputs.length; i++) {
+      if(nameInputs[i].value.trim() !== '') {
+        dishes.push({
+          name: nameInputs[i].value,
+          price: priceInputs[i].value
+        });
+      }
+    }
+
+    localStorage.setItem('promoSoup', soup);
+    localStorage.setItem('promoDrink', drink);
+    localStorage.setItem('menuDishes', JSON.stringify(dishes));
+
+    const alertBox = document.getElementById('alert');
+    alertBox.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+  }
+
+  // Sprawdzanie czy sesja jest nadal aktywna po odświeżeniu
+  if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+    showPanel();
+  }
+</script>
+</body>
+</html>
